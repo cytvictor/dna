@@ -1,6 +1,7 @@
 package org.ants.main;
 
 import com.alibaba.fastjson.JSON;
+import org.ants.generator.GraphBasedDPGenerator;
 import org.ants.generator.DPGenerator;
 import org.ants.parser.ConfigParser;
 import org.ants.parser.relation.Relation;
@@ -17,14 +18,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-
 public class DNA {
     private static final String currentPath = System.getProperty("user.dir");
     public static String workingPath;
     public static String testcase;
 
     public static ConfigParser parser;
-    public static DPGenerator generator;
+    public static GraphBasedDPGenerator generator;
     public static DPVerifier verifier;
 
     public static void init(String configPath) throws IOException {
@@ -38,18 +38,19 @@ public class DNA {
         HashSet<String> edgePorts = parser.getEdgePorts();
         Map<String, Map<String, Object>> dpDevices = parser.getDataPlaneModels();
 
-        generator = new DPGenerator();
+        generator = new GraphBasedDPGenerator();
         ArrayList<String> fibUpdates = generator.generateFibUpdates(configUpdates);
 
-        verifier = new DPVerifier(testcase, new ArrayList<>(topos), new ArrayList<>(edgePorts), dpDevices);
-        ArrayList<String> dpChanges = verifier.run(fibUpdates, null);
+        // verifier = new DPVerifier(testcase, new ArrayList<>(topos), new
+        // ArrayList<>(edgePorts), dpDevices);
+        // ArrayList<String> dpChanges = verifier.run(fibUpdates, null);
     }
 
     public static void update() throws IOException {
         parser.updateConfig();
         Map<String, List<Relation>> configUpdates = parser.getControlPlaneDiff(null);
         ArrayList<String> fibUpdates = generator.generateFibUpdates(configUpdates);
-        ArrayList<String> dpChanges = verifier.run(fibUpdates, null);
+        // ArrayList<String> dpChanges = verifier.run(fibUpdates, null);
     }
 
     public static void update(String configPath) throws IOException {
@@ -57,7 +58,7 @@ public class DNA {
         parser.updateConfig(configPath);
         Map<String, List<Relation>> configUpdates = parser.getControlPlaneDiff(null);
         ArrayList<String> fibUpdates = generator.generateFibUpdates(configUpdates);
-        ArrayList<String> dpChanges = verifier.run(fibUpdates, null);
+        // ArrayList<String> dpChanges = verifier.run(fibUpdates, null);
     }
 
     public static void dumpDDlogInput(PrintStream printer) {
@@ -104,17 +105,25 @@ public class DNA {
             String nodeName = entry.getKey();
             String json = JSON.toJSONString(entry.getValue());
 
-            PrintStream printer = new PrintStream(new BufferedOutputStream(new FileOutputStream(Paths.get(outputPath.toString(), nodeName + "_config.json").toString())), true);
+            PrintStream printer = new PrintStream(new BufferedOutputStream(
+                    new FileOutputStream(Paths.get(outputPath.toString(), nodeName + "_config.json").toString())),
+                    true);
             printer.println(json);
         }
     }
 
     public static void dumpAllToFile() throws IOException {
-        dumpDDlogInput(new PrintStream(new BufferedOutputStream(new FileOutputStream(Paths.get(workingPath, "change_base").toString())), true));
-        dumpTopo(new PrintStream(new BufferedOutputStream(new FileOutputStream(Paths.get(workingPath, "topo").toString())), true));
-        dumpEdgePorts(new PrintStream(new BufferedOutputStream(new FileOutputStream(Paths.get(workingPath, "edge_ports").toString())), true));
-        dumpFib(new PrintStream(new BufferedOutputStream(new FileOutputStream(Paths.get(workingPath, "fib").toString())), true));
-        dumpPolicy(new PrintStream(new BufferedOutputStream(new FileOutputStream(Paths.get(workingPath, "policy").toString())), true));
+        dumpDDlogInput(new PrintStream(
+                new BufferedOutputStream(new FileOutputStream(Paths.get(workingPath, "change_base").toString())),
+                true));
+        dumpTopo(new PrintStream(
+                new BufferedOutputStream(new FileOutputStream(Paths.get(workingPath, "topo").toString())), true));
+        dumpEdgePorts(new PrintStream(
+                new BufferedOutputStream(new FileOutputStream(Paths.get(workingPath, "edge_ports").toString())), true));
+        dumpFib(new PrintStream(
+                new BufferedOutputStream(new FileOutputStream(Paths.get(workingPath, "fib").toString())), true));
+        dumpPolicy(new PrintStream(
+                new BufferedOutputStream(new FileOutputStream(Paths.get(workingPath, "policy").toString())), true));
         dumpDPDevices();
     }
 }
