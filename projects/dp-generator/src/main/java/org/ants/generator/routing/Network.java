@@ -66,8 +66,10 @@ public class Network {
           if (node1 == node2) {
             distances.get(node1).put(node1, new BGPWeight(node1, node1, null, false, true));
           } else if (graph.hasEdge(node1, node2)) {
+            ArrayList<Long> asPath = new ArrayList<>();
+            asPath.add(node1.as);
             distances.get(node1).put(node2,
-                new BGPWeight(node1, node2, new BGPAdjRib(bgpNetwork, null, 100), false, false));
+                new BGPWeight(node1, node2, new BGPAdjRib(bgpNetwork, asPath, 100), false, false));
           } else {
             distances.get(node1).put(node2, new BGPWeight(node1, node2, null, true, false));
           }
@@ -97,13 +99,17 @@ public class Network {
 
     Map<Node, BGPWeight> dist = initDistances.get(startNode);
     Set<Node> remains = new HashSet<>();
+    for (Node node : this.graph.getVertices()) {
+      if (startNode != node)
+        remains.add(node);
+    }
 
     // initialize paths
     HashMap<Node, ArrayList<Node>> nodePaths = new HashMap<>();
     for (Node node : initDistances.keySet()) {
       ArrayList<Node> paths = new ArrayList<>();
       if (!dist.get(node).inf)
-        paths.add(startNode);
+        paths.add(node);
       nodePaths.put(node, paths);
     }
 
@@ -121,10 +127,22 @@ public class Network {
       visited.add(now);
 
       for (Node node : remains) {
-        BGPWeight d = dist.get(now).add(initDistances.get(now).get(node));
+        // System.out.println(startNode.node + " -> " + now.node + " -> " + node.node);
+        // System.out.println(" " + startNode.node + "->" + now.node + ": " +
+        // dist.get(now));
+        // System.out.println(" " + now.node + "->" + node.node + ": " +
+        // initDistances.get(now).get(node));
+        BGPWeight d = dist.get(now).plus(initDistances.get(now).get(node));
+        // System.out.println(" Check shorter=new: " + startNode.node + "->" + node.node
+        // + ": " + d);
+        // System.out.println(" Check shorter=old: " + startNode.node + "->" + node.node
+        // + ": " + dist.get(node));
 
         if (d.lowerThan(dist.get(node))) {
+          // System.out.println(" Updated to new " + nodePaths.get(node));
           dist.put(node, d);
+          nodePaths.get(node).clear();
+          nodePaths.get(node).addAll(nodePaths.get(now));
           nodePaths.get(node).add(node);
         }
       }

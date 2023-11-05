@@ -18,7 +18,7 @@ public class BGPWeight {
   }
 
   // add
-  public BGPWeight add(BGPWeight _other) {
+  public BGPWeight plus(BGPWeight _other) {
     if (this.inf) {
       return this;
     }
@@ -58,5 +58,10 @@ public class BGPWeight {
 
     // compare lexical order
     return false;
+  }
+
+  public String toString() {
+    return "BGPWeight(" + this.from + "," + this.to + "," + this.adjRib + ",inf=" + this.inf + ",isLocal="
+        + this.isLocal + ")";
   }
 }

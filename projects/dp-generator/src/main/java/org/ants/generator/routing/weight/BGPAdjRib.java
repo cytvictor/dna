@@ -14,4 +14,8 @@ public class BGPAdjRib {
     this.asPath = asPath;
     this.localPref = localPref;
   }
+
+  public String toString() {
+    return "BGPAdjRib(" + bgpNetwork.prefix + ", " + asPath + ", " + localPref + ")";
+  }
 }
