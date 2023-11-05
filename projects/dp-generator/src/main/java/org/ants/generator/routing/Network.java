@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.ants.generator.routing.weight.BGPAdjRib;
 import org.ants.generator.routing.weight.BGPWeight;
+import org.ants.parser.datamodel.Prefix;
 import org.ants.parser.relation.*;
 import org.ants.parser.relation.neighbor.*;
 
@@ -76,9 +77,25 @@ public class Network {
         }
       }
 
-      // get updated distances and paths
+      // 2. get updated distances and paths
       HashMap<Node, ArrayList<Node>> nodePaths = this.dijkstraForAdvertisement(bgpNetwork.node, distances);
       this.printNodePaths(nodePaths);
+
+      // 3. Derive RIBs from SPT
+      Map<Node, Set<Prefix>> nodeRibs = new HashMap<>();
+      for (Node node : nodePaths.keySet()) {
+        for (int i = 0; i < nodePaths.get(node).size(); i++) {
+          Node next = nodePaths.get(node).get(i);
+          Set<Prefix> ribs = nodeRibs.get(next);
+          if (ribs == null) {
+            ribs = new HashSet<>();
+            nodeRibs.put(next, ribs);
+          }
+          ribs.add(distances.get(bgpNetwork.node).get(next).adjRib.bgpNetwork.prefix);
+        }
+      }
+
+      this.printNodeRIBs(nodeRibs);
     }
   }
 
@@ -92,6 +109,24 @@ public class Network {
     }
   }
 
+  public void printNodeRIBs(Map<Node, Set<Prefix>> nodeRibs) {
+    for (Node node : nodeRibs.keySet()) {
+      System.out.println("RIBs of " + node.node + ": ");
+      for (Prefix rib : nodeRibs.get(node)) {
+        System.out.println("  " + rib);
+      }
+      System.out.println();
+    }
+  }
+
+  /**
+   * Run dijkstra to update the distance from startNode to all other nodes, and
+   * also record the available paths.
+   * 
+   * @param startNode     the node to start propagation
+   * @param initDistances initial distances from all nodes to all other nodes
+   * @return
+   */
   public HashMap<Node, ArrayList<Node>> dijkstraForAdvertisement(Node startNode,
       Map<Node, Map<Node, BGPWeight>> initDistances) {
     Set<Node> visited = new HashSet<>();
@@ -104,11 +139,11 @@ public class Network {
         remains.add(node);
     }
 
-    // initialize paths
+    // initialize paths (used for multi path)
     HashMap<Node, ArrayList<Node>> nodePaths = new HashMap<>();
     for (Node node : initDistances.keySet()) {
       ArrayList<Node> paths = new ArrayList<>();
-      if (!dist.get(node).inf)
+      if (!dist.get(node).inf && !dist.get(node).isLocal)
         paths.add(node);
       nodePaths.put(node, paths);
     }
@@ -127,23 +162,10 @@ public class Network {
       visited.add(now);
 
       for (Node node : remains) {
-        // System.out.println(startNode.node + " -> " + now.node + " -> " + node.node);
-        // System.out.println(" " + startNode.node + "->" + now.node + ": " +
-        // dist.get(now));
-        // System.out.println(" " + now.node + "->" + node.node + ": " +
-        // initDistances.get(now).get(node));
         BGPWeight d = dist.get(now).plus(initDistances.get(now).get(node));
-        // System.out.println(" Check shorter=new: " + startNode.node + "->" + node.node
-        // + ": " + d);
-        // System.out.println(" Check shorter=old: " + startNode.node + "->" + node.node
-        // + ": " + dist.get(node));
 
         if (d.lowerThan(dist.get(node))) {
-          // System.out.println(" Updated to new " + nodePaths.get(node));
           dist.put(node, d);
-          nodePaths.get(node).clear();
-          nodePaths.get(node).addAll(nodePaths.get(now));
-          nodePaths.get(node).add(node);
         }
       }
     }

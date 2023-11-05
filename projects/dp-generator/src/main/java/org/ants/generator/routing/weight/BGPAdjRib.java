@@ -18,4 +18,13 @@ public class BGPAdjRib {
   public String toString() {
     return "BGPAdjRib(" + bgpNetwork.prefix + ", " + asPath + ", " + localPref + ")";
   }
+
+  public boolean equals(Object o) {
+    if (o instanceof BGPAdjRib) {
+      BGPAdjRib other = (BGPAdjRib) o;
+      return this.bgpNetwork.equals(other.bgpNetwork) && this.asPath.equals(other.asPath)
+          && this.localPref == other.localPref;
+    }
+    return false;
+  }
 }

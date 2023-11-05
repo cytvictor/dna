@@ -5,7 +5,7 @@ import org.ants.parser.relation.Node;
 public class BGPWeight {
   private Node from;
   private Node to;
-  private BGPAdjRib adjRib;
+  public BGPAdjRib adjRib;
   public boolean inf;
   public boolean isLocal;
 

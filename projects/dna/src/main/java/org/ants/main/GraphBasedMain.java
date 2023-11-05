@@ -21,6 +21,13 @@ public class GraphBasedMain {
   public static GraphBasedDPGenerator generator;
   public static DPVerifier verifier;
 
+  public static void main(String[] args) throws IOException {
+    // init("networks/example-network/base");
+    init("../Dynamic-APSP-Dataplane-Verification/networks/withdrawals/update");
+    // update("../Dynamic-APSP-Dataplane-Verification/networks/withdrawals/update");
+
+  }
+
   public static void init(String configPath) throws IOException {
     configPath = Paths.get(configPath).toRealPath().toString();
     testcase = Paths.get(configPath).toRealPath().getFileName().toString();
@@ -40,10 +47,12 @@ public class GraphBasedMain {
     // ArrayList<String> dpChanges = verifier.run(fibUpdates, null);
   }
 
-  public static void main(String[] args) throws IOException {
-    // init("networks/example-network/base");
-    init("../Dynamic-APSP-Dataplane-Verification/networks/withdrawals/base");
-
+  public static void update(String configPath) throws IOException {
+    configPath = Paths.get(configPath).toRealPath().toString();
+    parser.updateConfig(configPath);
+    Map<String, List<Relation>> configUpdates = parser.getControlPlaneDiff(null);
+    ArrayList<String> fibUpdates = generator.generateFibUpdates(configUpdates);
+    // ArrayList<String> dpChanges = verifier.run(fibUpdates, null);
   }
 
 }
