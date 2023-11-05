@@ -19,6 +19,7 @@ public class BGPAdjRib {
     return "BGPAdjRib(" + bgpNetwork.prefix + ", " + asPath + ", " + localPref + ")";
   }
 
+  @Override
   public boolean equals(Object o) {
     if (o instanceof BGPAdjRib) {
       BGPAdjRib other = (BGPAdjRib) o;
@@ -26,5 +27,10 @@ public class BGPAdjRib {
           && this.localPref == other.localPref;
     }
     return false;
+  }
+
+  @Override
+  public int hashCode() {
+    return bgpNetwork.hashCode() + asPath.hashCode() + (int) localPref;
   }
 }

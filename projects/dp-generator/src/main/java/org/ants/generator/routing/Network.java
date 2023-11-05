@@ -71,18 +71,27 @@ public class Network {
           bgpNetwork.node, new BGPPath<Node, ComparableBGPWeight>(bgpNetwork.node, bgpNetwork));
 
       // 2. Derive RIBs from SPT
-      Map<Node, Set<Prefix>> nodeRibs = new HashMap<>();
+      Map<Node, Set<BgpRib>> nodeRibs = new HashMap<>();
       for (Map.Entry<Node, List<Path<Node, ComparableBGPWeight>>> entry : shortestPaths.entrySet()) {
         System.out.println("Shortest paths to " + entry.getKey().node + ":");
         for (Path<Node, ComparableBGPWeight> path : entry.getValue()) {
           System.out.println("  " + path);
+          Node nextHop = null;
           for (Node visitedNode : path.getVertices()) {
-            Set<Prefix> ribs = nodeRibs.get(visitedNode);
+            Set<BgpRib> ribs = nodeRibs.get(visitedNode);
             if (ribs == null) {
               ribs = new HashSet<>();
               nodeRibs.put(visitedNode, ribs);
             }
-            ribs.add(((BGPPath<Node, ComparableBGPWeight>) path).getBgpNetwork().prefix);
+            if (visitedNode == bgpNetwork.node) {
+              // 如果是本地节点，那么就是local rib, 下一跳是本地
+              ribs.add(new BgpRib(((BGPPath<Node, ComparableBGPWeight>) path).getBgpNetwork().prefix, bgpNetwork.node,
+                  true));
+            } else {
+              // 如果是其他节点，那么就是adj rib, 下一跳是 SPT 前一个节点
+              ribs.add(new BgpRib(((BGPPath<Node, ComparableBGPWeight>) path).getBgpNetwork().prefix, nextHop));
+            }
+            nextHop = visitedNode;
           }
         }
       }
@@ -91,10 +100,10 @@ public class Network {
     }
   }
 
-  public void printNodeRIBs(Map<Node, Set<Prefix>> nodeRibs) {
+  public void printNodeRIBs(Map<Node, Set<BgpRib>> nodeRibs) {
     for (Node node : nodeRibs.keySet()) {
       System.out.println("RIBs of " + node.node + ": ");
-      for (Prefix rib : nodeRibs.get(node)) {
+      for (BgpRib rib : nodeRibs.get(node)) {
         System.out.println("  " + rib);
       }
       System.out.println();

@@ -23,7 +23,9 @@ public class GraphBasedMain {
 
   public static void main(String[] args) throws IOException {
     // init("networks/example-network/base");
-    init("../Dynamic-APSP-Dataplane-Verification/networks/withdrawals/update");
+    // init("../Dynamic-APSP-Dataplane-Verification/networks/withdrawals/update");
+    init("../Dynamic-APSP-Dataplane-Verification/networks/single-source-multipath/base");
+
     // update("../Dynamic-APSP-Dataplane-Verification/networks/withdrawals/update");
 
   }
