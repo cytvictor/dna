@@ -25,6 +25,7 @@ public class GraphBasedMain {
     // init("networks/example-network/base");
     // init("../Dynamic-APSP-Dataplane-Verification/networks/withdrawals/update");
     init("../Dynamic-APSP-Dataplane-Verification/networks/single-source-multipath/base");
+    init("../Dynamic-APSP-Dataplane-Verification/networks/fattree/bgp/bgp_fattree04");
 
     // update("../Dynamic-APSP-Dataplane-Verification/networks/withdrawals/update");
 

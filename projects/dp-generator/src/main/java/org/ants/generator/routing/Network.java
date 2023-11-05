@@ -62,6 +62,8 @@ public class Network {
   }
 
   public void propagateRouteAdvertisementSSSP() {
+    Map<Node, Set<BgpRib>> nodeRibs = new HashMap<>();
+
     for (BgpNetwork bgpNetwork : networksPendingPropagate) {
       System.out.println("Propagating " + bgpNetwork);
 
@@ -71,7 +73,6 @@ public class Network {
           bgpNetwork.node, new BGPPath<Node, ComparableBGPWeight>(bgpNetwork.node, bgpNetwork));
 
       // 2. Derive RIBs from SPT
-      Map<Node, Set<BgpRib>> nodeRibs = new HashMap<>();
       for (Map.Entry<Node, List<Path<Node, ComparableBGPWeight>>> entry : shortestPaths.entrySet()) {
         System.out.println("Shortest paths to " + entry.getKey().node + ":");
         for (Path<Node, ComparableBGPWeight> path : entry.getValue()) {
@@ -95,9 +96,9 @@ public class Network {
           }
         }
       }
-
-      this.printNodeRIBs(nodeRibs);
     }
+
+    this.printNodeRIBs(nodeRibs);
   }
 
   public void printNodeRIBs(Map<Node, Set<BgpRib>> nodeRibs) {

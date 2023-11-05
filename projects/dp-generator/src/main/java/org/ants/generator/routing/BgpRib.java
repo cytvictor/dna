@@ -49,6 +49,7 @@ public class BgpRib {
   public String toString() {
     if (isLocal) {
       return "BgpRib{" +
+          "prefix=" + prefix +
           "isLocal=" + isLocal +
           '}';
     }
