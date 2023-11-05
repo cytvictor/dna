@@ -12,14 +12,14 @@ public class DynamicDijkstra<TNode, TWeight extends Comparable<TWeight>> {
     currentWeights = new HashMap<>();
   }
 
-  public Map<TNode, List<Path<TNode, TWeight>>> findShortestPaths(Graph<TNode, TWeight> graph, TNode source) {
+  public Map<TNode, List<Path<TNode, TWeight>>> findShortestPaths(Graph<TNode, TWeight> graph, TNode source,
+      Path<TNode, TWeight> initialPath) {
     shortestPaths.clear();
     currentWeights.clear();
 
     PriorityQueue<Path<TNode, TWeight>> minHeap = new PriorityQueue<>();
     Set<TNode> visited = new HashSet<>();
 
-    Path<TNode, TWeight> initialPath = new NumericalPath<>(source);
     minHeap.offer(initialPath);
 
     while (!minHeap.isEmpty()) {
@@ -79,7 +79,8 @@ public class DynamicDijkstra<TNode, TWeight extends Comparable<TWeight>> {
     graph.addEdge("D", "E", 2);
 
     DynamicDijkstra<String, Integer> dynamicDijkstra = new DynamicDijkstra<>();
-    Map<String, List<Path<String, Integer>>> shortestPaths = dynamicDijkstra.findShortestPaths(graph, "A");
+    Map<String, List<Path<String, Integer>>> shortestPaths = dynamicDijkstra.findShortestPaths(graph, "A",
+        new NumericalPath<>("A"));
 
     for (Map.Entry<String, List<Path<String, Integer>>> entry : shortestPaths.entrySet()) {
       System.out.println("Shortest paths to " + entry.getKey() + ":");
@@ -92,7 +93,7 @@ public class DynamicDijkstra<TNode, TWeight extends Comparable<TWeight>> {
     graph.updateEdge("A", "B", 5);
 
     // Re-run Dijkstra's algorithm to account for the updated weight
-    shortestPaths = dynamicDijkstra.findShortestPaths(graph, "A");
+    shortestPaths = dynamicDijkstra.findShortestPaths(graph, "A", new NumericalPath<>("A"));
 
     for (Map.Entry<String, List<Path<String, Integer>>> entry : shortestPaths.entrySet()) {
       System.out.println("Updated shortest paths to " + entry.getKey() + ":");

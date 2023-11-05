@@ -10,13 +10,13 @@ public class DijkstraMultiPath<TNode, TWeight extends Comparable<TWeight>> {
     shortestPaths = new HashMap<>();
   }
 
-  public Map<TNode, List<Path<TNode, TWeight>>> findShortestPaths(Graph<TNode, TWeight> graph, TNode source) {
+  public Map<TNode, List<Path<TNode, TWeight>>> findShortestPaths(Graph<TNode, TWeight> graph, TNode source,
+      Path<TNode, TWeight> initialPath) {
     shortestPaths.clear();
 
     PriorityQueue<Path<TNode, TWeight>> minHeap = new PriorityQueue<>();
     Set<TNode> visited = new HashSet<>();
 
-    Path<TNode, TWeight> initialPath = new NumericalPath<>(source);
     minHeap.offer(initialPath);
 
     while (!minHeap.isEmpty()) {
@@ -62,7 +62,8 @@ public class DijkstraMultiPath<TNode, TWeight extends Comparable<TWeight>> {
     graph.addEdge("D", "E", 2);
 
     DijkstraMultiPath<String, Integer> dijkstra = new DijkstraMultiPath<>();
-    Map<String, List<Path<String, Integer>>> shortestPaths = dijkstra.findShortestPaths(graph, "A");
+    Map<String, List<Path<String, Integer>>> shortestPaths = dijkstra.findShortestPaths(graph, "A",
+        new NumericalPath<>("A"));
 
     for (Map.Entry<String, List<Path<String, Integer>>> entry : shortestPaths.entrySet()) {
       System.out.println("Shortest paths to " + entry.getKey() + ":");

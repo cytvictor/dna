@@ -14,8 +14,25 @@ public class ComparableBGPWeight implements Comparable<ComparableBGPWeight> {
 
   @Override
   public int compareTo(ComparableBGPWeight o) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'compareTo'");
+
+    if (this.inf && o.inf) {
+      return 0;
+    }
+    if (this.inf)
+      return 1;
+    // if (o.inf) {
+    return -1;
+    // }
+
+    // The BGP decision Process
+    // 1. Local preference
+    // 2. AS path length
+    // 3. Origin type
+    // 4. MED
+    // 5. eBGP over iBGP
+    // 6. IGP cost to BGP next hop
+    // 7. Router ID
+    // return 0;
   }
 
   @Override
