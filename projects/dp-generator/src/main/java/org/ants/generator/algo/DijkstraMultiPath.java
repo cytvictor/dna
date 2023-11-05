@@ -2,26 +2,26 @@ package org.ants.generator.algo;
 
 import java.util.*;
 
-public class DijkstraMultiPath<T, W extends Comparable<W>> {
+public class DijkstraMultiPath<TNode, TWeight extends Comparable<TWeight>> {
 
-  private Map<T, List<Path<T, W>>> shortestPaths;
+  private Map<TNode, List<Path<TNode, TWeight>>> shortestPaths;
 
   public DijkstraMultiPath() {
     shortestPaths = new HashMap<>();
   }
 
-  public Map<T, List<Path<T, W>>> findShortestPaths(Graph<T, W> graph, T source) {
+  public Map<TNode, List<Path<TNode, TWeight>>> findShortestPaths(Graph<TNode, TWeight> graph, TNode source) {
     shortestPaths.clear();
 
-    PriorityQueue<Path<T, W>> minHeap = new PriorityQueue<>();
-    Set<T> visited = new HashSet<>();
+    PriorityQueue<Path<TNode, TWeight>> minHeap = new PriorityQueue<>();
+    Set<TNode> visited = new HashSet<>();
 
-    Path<T, W> initialPath = new Path<>(source);
+    Path<TNode, TWeight> initialPath = new Path<>(source);
     minHeap.offer(initialPath);
 
     while (!minHeap.isEmpty()) {
-      Path<T, W> currentPath = minHeap.poll();
-      T currentVertex = currentPath.getDestination();
+      Path<TNode, TWeight> currentPath = minHeap.poll();
+      TNode currentVertex = currentPath.getDestination();
 
       if (visited.contains(currentVertex)) {
         continue;
@@ -35,14 +35,14 @@ public class DijkstraMultiPath<T, W extends Comparable<W>> {
 
       shortestPaths.get(currentVertex).add(currentPath);
 
-      List<Edge<T, W>> neighbors = graph.getNeighbors(currentVertex);
+      List<Edge<TNode, TWeight>> neighbors = graph.getNeighbors(currentVertex);
 
-      for (Edge<T, W> neighbor : neighbors) {
-        T neighborVertex = neighbor.getDestination();
-        W weight = neighbor.getWeight();
+      for (Edge<TNode, TWeight> neighbor : neighbors) {
+        TNode neighborVertex = neighbor.getDestination();
+        TWeight weight = neighbor.getWeight();
 
         if (!visited.contains(neighborVertex)) {
-          Path<T, W> newPath = currentPath.extend(neighborVertex, weight);
+          Path<TNode, TWeight> newPath = currentPath.extend(neighborVertex, weight);
           minHeap.offer(newPath);
         }
       }

@@ -2,29 +2,29 @@ package org.ants.generator.algo;
 
 import java.util.*;
 
-public class DynamicDijkstra<T, W extends Comparable<W>> {
+public class DynamicDijkstra<TNode, TWeight extends Comparable<TWeight>> {
 
-  private Map<T, List<Path<T, W>>> shortestPaths;
-  private Map<T, Map<T, W>> currentWeights; // Map to store current weights of edges
+  private Map<TNode, List<Path<TNode, TWeight>>> shortestPaths;
+  private Map<TNode, Map<TNode, TWeight>> currentWeights; // Map to store current weights of edges
 
   public DynamicDijkstra() {
     shortestPaths = new HashMap<>();
     currentWeights = new HashMap<>();
   }
 
-  public Map<T, List<Path<T, W>>> findShortestPaths(Graph<T, W> graph, T source) {
+  public Map<TNode, List<Path<TNode, TWeight>>> findShortestPaths(Graph<TNode, TWeight> graph, TNode source) {
     shortestPaths.clear();
     currentWeights.clear();
 
-    PriorityQueue<Path<T, W>> minHeap = new PriorityQueue<>();
-    Set<T> visited = new HashSet<>();
+    PriorityQueue<Path<TNode, TWeight>> minHeap = new PriorityQueue<>();
+    Set<TNode> visited = new HashSet<>();
 
-    Path<T, W> initialPath = new Path<>(source);
+    Path<TNode, TWeight> initialPath = new Path<>(source);
     minHeap.offer(initialPath);
 
     while (!minHeap.isEmpty()) {
-      Path<T, W> currentPath = minHeap.poll();
-      T currentVertex = currentPath.getDestination();
+      Path<TNode, TWeight> currentPath = minHeap.poll();
+      TNode currentVertex = currentPath.getDestination();
 
       if (visited.contains(currentVertex)) {
         continue;
@@ -38,17 +38,17 @@ public class DynamicDijkstra<T, W extends Comparable<W>> {
 
       shortestPaths.get(currentVertex).add(currentPath);
 
-      List<Edge<T, W>> neighbors = graph.getNeighbors(currentVertex);
+      List<Edge<TNode, TWeight>> neighbors = graph.getNeighbors(currentVertex);
 
-      for (Edge<T, W> neighbor : neighbors) {
-        T neighborVertex = neighbor.getDestination();
-        W weight = neighbor.getWeight();
+      for (Edge<TNode, TWeight> neighbor : neighbors) {
+        TNode neighborVertex = neighbor.getDestination();
+        TWeight weight = neighbor.getWeight();
 
         if (!visited.contains(neighborVertex)) {
-          W currentWeight = getCurrentWeight(currentVertex, neighborVertex);
+          TWeight currentWeight = getCurrentWeight(currentVertex, neighborVertex);
           if (currentWeight == null || weight.compareTo(currentWeight) < 0) {
             updateCurrentWeight(currentVertex, neighborVertex, weight);
-            Path<T, W> newPath = currentPath.extend(neighborVertex, weight);
+            Path<TNode, TWeight> newPath = currentPath.extend(neighborVertex, weight);
             minHeap.offer(newPath);
           }
         }
@@ -59,14 +59,13 @@ public class DynamicDijkstra<T, W extends Comparable<W>> {
   }
 
   // Function to get the current weight of an edge
-  private W getCurrentWeight(T source, T destination) {
+  private TWeight getCurrentWeight(TNode source, TNode destination) {
     return currentWeights.getOrDefault(source, new HashMap<>()).get(destination);
   }
 
   // Function to update the current weight of an edge
-  private void updateCurrentWeight(T source, T destination, W newWeight) {
+  private void updateCurrentWeight(TNode source, TNode destination, TWeight newWeight) {
     currentWeights.computeIfAbsent(source, k -> new HashMap<>()).put(destination, newWeight);
-    currentWeights.computeIfAbsent(destination, k -> new HashMap<>()).put(source, newWeight); // For undirected graph
   }
 
   public static void main(String[] args) {

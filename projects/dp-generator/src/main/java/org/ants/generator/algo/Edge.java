@@ -1,24 +1,32 @@
 package org.ants.generator.algo;
 
-public class Edge<T, W extends Comparable<W>> {
-  private T destination;
-  private W weight;
+public class Edge<TNode, TWeight extends Comparable<TWeight>> {
+  private TNode destination;
+  private TWeight weight;
 
-  public Edge(T destination, W weight) {
+  public Edge(TNode destination, TWeight weight) {
     this.destination = destination;
     this.weight = weight;
   }
 
-  public T getDestination() {
+  public TNode getDestination() {
     return destination;
   }
 
-  public W getWeight() {
+  public TWeight getWeight() {
     return weight;
   }
 
-  public void setWeight(W weight) {
+  public void setWeight(TWeight weight) {
     this.weight = weight;
+  }
+
+  @Override
+  public String toString() {
+    return "Edge{" +
+        "destination=" + destination +
+        ", weight=" + weight +
+        "}";
   }
 
 }

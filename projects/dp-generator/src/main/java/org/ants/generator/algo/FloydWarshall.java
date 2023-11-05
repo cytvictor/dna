@@ -2,40 +2,40 @@ package org.ants.generator.algo;
 
 import java.util.*;
 
-public class FloydWarshall<T, W extends Comparable<W>> {
+public class FloydWarshall<TNode, TWeight extends Comparable<TWeight>> {
 
-  private Map<T, Map<T, Path<T, W>>> shortestPaths;
+  private Map<TNode, Map<TNode, Path<TNode, TWeight>>> shortestPaths;
 
   public FloydWarshall() {
     shortestPaths = new HashMap<>();
   }
 
-  public Map<T, Map<T, Path<T, W>>> findAllShortestPaths(Graph<T, W> graph) {
+  public Map<TNode, Map<TNode, Path<TNode, TWeight>>> findAllShortestPaths(Graph<TNode, TWeight> graph) {
     shortestPaths.clear();
 
     // Initialize shortestPaths with direct paths and weights
-    for (T vertex : graph.getVertices()) {
+    for (TNode vertex : graph.getVertices()) {
       shortestPaths.put(vertex, new HashMap<>());
-      for (Edge<T, W> edge : graph.getNeighbors(vertex)) {
-        T destination = edge.getDestination();
-        W weight = edge.getWeight();
+      for (Edge<TNode, TWeight> edge : graph.getNeighbors(vertex)) {
+        TNode destination = edge.getDestination();
+        TWeight weight = edge.getWeight();
         shortestPaths.get(vertex).put(destination, new Path<>(Arrays.asList(vertex, destination), weight));
       }
     }
 
-    for (T k : graph.getVertices()) {
-      for (T i : graph.getVertices()) {
-        for (T j : graph.getVertices()) {
-          Path<T, W> pathIK = shortestPaths.get(i).get(k);
-          Path<T, W> pathKJ = shortestPaths.get(k).get(j);
+    for (TNode k : graph.getVertices()) {
+      for (TNode i : graph.getVertices()) {
+        for (TNode j : graph.getVertices()) {
+          Path<TNode, TWeight> pathIK = shortestPaths.get(i).get(k);
+          Path<TNode, TWeight> pathKJ = shortestPaths.get(k).get(j);
           if (pathIK != null && pathKJ != null) {
-            W newWeight = pathIK.getTotalWeight().compareTo(pathKJ.getTotalWeight()) < 0 ? pathKJ.getTotalWeight()
+            TWeight newWeight = pathIK.getTotalWeight().compareTo(pathKJ.getTotalWeight()) < 0 ? pathKJ.getTotalWeight()
                 : pathIK.getTotalWeight();
             if (!shortestPaths.get(i).containsKey(j) ||
                 newWeight.compareTo(shortestPaths.get(i).get(j).getTotalWeight()) < 0) {
-              List<T> vertices = new ArrayList<>(pathIK.getVertices());
+              List<TNode> vertices = new ArrayList<>(pathIK.getVertices());
               vertices.addAll(pathKJ.getVertices().subList(1, pathKJ.getVertices().size()));
-              Path<T, W> newPath = new Path<>(vertices, newWeight);
+              Path<TNode, TWeight> newPath = new Path<>(vertices, newWeight);
               shortestPaths.get(i).put(j, newPath);
             }
           }
@@ -57,7 +57,8 @@ public class FloydWarshall<T, W extends Comparable<W>> {
     graph.addEdge("D", "E", 2);
 
     FloydWarshall<String, Integer> floydWarshall = new FloydWarshall<>();
-    Map<String, Map<String, Path<String, Integer>>> allShortestPaths = floydWarshall.findAllShortestPaths(graph);
+    Map<String, Map<String, Path<String, Integer>>> allShortestPaths = floydWarshall
+        .findAllShortestPaths(graph);
 
     for (Map.Entry<String, Map<String, Path<String, Integer>>> entry : allShortestPaths.entrySet()) {
       System.out.println("Shortest paths from " + entry.getKey() + ":");
