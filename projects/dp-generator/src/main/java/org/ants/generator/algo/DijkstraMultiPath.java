@@ -2,7 +2,7 @@ package org.ants.generator.algo;
 
 import java.util.*;
 
-public class DijkstraMultiPath<TNode, TWeight extends Comparable<TWeight>> {
+public class DijkstraMultiPath<TNode, TWeight extends Comparable<TWeight>> implements SupportsSSSP<TNode, TWeight> {
 
   private Map<TNode, List<Path<TNode, TWeight>>> shortestPaths;
 

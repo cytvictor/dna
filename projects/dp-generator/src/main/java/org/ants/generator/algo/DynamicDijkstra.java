@@ -2,7 +2,7 @@ package org.ants.generator.algo;
 
 import java.util.*;
 
-public class DynamicDijkstra<TNode, TWeight extends Comparable<TWeight>> {
+public class DynamicDijkstra<TNode, TWeight extends Comparable<TWeight>> implements SupportsSSSP<TNode, TWeight> {
 
   private Map<TNode, List<Path<TNode, TWeight>>> shortestPaths;
   private Map<TNode, Map<TNode, TWeight>> currentWeights; // Map to store current weights of edges

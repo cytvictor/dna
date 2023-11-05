@@ -9,11 +9,8 @@ import java.util.Set;
 
 import org.ants.generator.algo.DijkstraMultiPath;
 import org.ants.generator.algo.Graph;
-import org.ants.generator.algo.NumericalPath;
 import org.ants.generator.algo.Path;
 import org.ants.generator.routing.path.BGPPath;
-import org.ants.generator.routing.weight.BGPAdjRib;
-import org.ants.generator.routing.weight.BGPWeight;
 import org.ants.generator.routing.weight.ComparableBGPWeight;
 import org.ants.parser.datamodel.Prefix;
 import org.ants.parser.relation.*;

@@ -2,7 +2,7 @@ package org.ants.generator.algo;
 
 import java.util.*;
 
-public class FloydWarshall<TNode, TWeight extends Comparable<TWeight>> {
+public class FloydWarshall<TNode, TWeight extends Comparable<TWeight>> implements SupportsAPSP<TNode, TWeight> {
 
   private Map<TNode, Map<TNode, Path<TNode, TWeight>>> shortestPaths;
 

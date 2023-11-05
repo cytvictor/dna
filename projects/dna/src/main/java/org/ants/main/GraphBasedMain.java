@@ -35,9 +35,9 @@ public class GraphBasedMain {
 
     parser = new ConfigParser(testcase, configPath, workingPath);
     Map<String, List<Relation>> configUpdates = parser.getControlPlaneDiff(null);
-    HashSet<String> topos = parser.getTopology();
-    HashSet<String> edgePorts = parser.getEdgePorts();
-    Map<String, Map<String, Object>> dpDevices = parser.getDataPlaneModels();
+    // HashSet<String> topos = parser.getTopology();
+    // HashSet<String> edgePorts = parser.getEdgePorts();
+    // Map<String, Map<String, Object>> dpDevices = parser.getDataPlaneModels();
 
     generator = new GraphBasedDPGenerator();
     ArrayList<String> fibUpdates = generator.generateFibUpdates(configUpdates);
