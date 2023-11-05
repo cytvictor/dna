@@ -19,7 +19,7 @@ public class DynamicDijkstra<TNode, TWeight extends Comparable<TWeight>> {
     PriorityQueue<Path<TNode, TWeight>> minHeap = new PriorityQueue<>();
     Set<TNode> visited = new HashSet<>();
 
-    Path<TNode, TWeight> initialPath = new Path<>(source);
+    Path<TNode, TWeight> initialPath = new NumericalPath<>(source);
     minHeap.offer(initialPath);
 
     while (!minHeap.isEmpty()) {

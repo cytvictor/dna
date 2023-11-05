@@ -3,9 +3,9 @@ package org.ants.generator.routing.path;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ants.generator.algo.AbstractPath;
+import org.ants.generator.algo.Path;
 
-public class BGPPath<TNode, TWeight extends Comparable<TWeight>> extends AbstractPath<TNode, TWeight> {
+public class BGPPath<TNode, TWeight extends Comparable<TWeight>> extends Path<TNode, TWeight> {
   public BGPPath(TNode source) {
     super(source);
   }
@@ -15,7 +15,7 @@ public class BGPPath<TNode, TWeight extends Comparable<TWeight>> extends Abstrac
   }
 
   @Override
-  public AbstractPath<TNode, TWeight> extend(TNode destination, TWeight weight) {
+  public Path<TNode, TWeight> extend(TNode destination, TWeight weight) {
     List<TNode> newVertices = new ArrayList<>(vertices);
     newVertices.add(destination);
 

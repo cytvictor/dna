@@ -19,7 +19,7 @@ public class FloydWarshall<TNode, TWeight extends Comparable<TWeight>> {
       for (Edge<TNode, TWeight> edge : graph.getNeighbors(vertex)) {
         TNode destination = edge.getDestination();
         TWeight weight = edge.getWeight();
-        shortestPaths.get(vertex).put(destination, new Path<>(Arrays.asList(vertex, destination), weight));
+        shortestPaths.get(vertex).put(destination, new NumericalPath<>(Arrays.asList(vertex, destination), weight));
       }
     }
 
@@ -35,7 +35,7 @@ public class FloydWarshall<TNode, TWeight extends Comparable<TWeight>> {
                 newWeight.compareTo(shortestPaths.get(i).get(j).getTotalWeight()) < 0) {
               List<TNode> vertices = new ArrayList<>(pathIK.getVertices());
               vertices.addAll(pathKJ.getVertices().subList(1, pathKJ.getVertices().size()));
-              Path<TNode, TWeight> newPath = new Path<>(vertices, newWeight);
+              Path<TNode, TWeight> newPath = new NumericalPath<>(vertices, newWeight);
               shortestPaths.get(i).put(j, newPath);
             }
           }

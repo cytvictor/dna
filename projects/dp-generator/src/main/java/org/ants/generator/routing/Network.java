@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.ants.generator.algo.Path;
 import org.ants.generator.algo.DijkstraMultiPath;
 import org.ants.generator.algo.Graph;
+import org.ants.generator.algo.NumericalPath;
 import org.ants.generator.routing.weight.BGPAdjRib;
 import org.ants.generator.routing.weight.BGPWeight;
 import org.ants.generator.routing.weight.ComparableBGPWeight;
@@ -65,7 +67,15 @@ public class Network {
       System.out.println("Propagating " + bgpNetwork);
 
       DijkstraMultiPath<Node, ComparableBGPWeight> dijkstra = new DijkstraMultiPath<>();
-      dijkstra.findShortestPaths(graph, bgpNetwork.node);
+      Map<Node, List<Path<Node, ComparableBGPWeight>>> shortestPaths = dijkstra.findShortestPaths(graph,
+          bgpNetwork.node);
+
+      for (Map.Entry<Node, List<Path<Node, ComparableBGPWeight>>> entry : shortestPaths.entrySet()) {
+        System.out.println("Shortest paths to " + entry.getKey() + ":");
+        for (Path<Node, ComparableBGPWeight> path : entry.getValue()) {
+          System.out.println(path);
+        }
+      }
 
       // build initial distances
       // Map<Node, Map<Node, BGPWeight>> distances = new HashMap<>();
