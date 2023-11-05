@@ -16,4 +16,9 @@ public class Edge<T, W extends Comparable<W>> {
   public W getWeight() {
     return weight;
   }
+
+  public void setWeight(W weight) {
+    this.weight = weight;
+  }
+
 }

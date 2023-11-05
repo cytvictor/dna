@@ -17,6 +17,10 @@ public class Path<T, W extends Comparable<W>> implements Comparable<Path<T, W>> 
     this.totalWeight = totalWeight;
   }
 
+  public List<T> getVertices() {
+    return vertices;
+  }
+
   public T getDestination() {
     return vertices.get(vertices.size() - 1);
   }
