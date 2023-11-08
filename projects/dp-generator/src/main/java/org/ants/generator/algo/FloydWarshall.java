@@ -29,6 +29,7 @@ public class FloydWarshall<TNode, TWeight extends Comparable<TWeight>> implement
           Path<TNode, TWeight> pathIK = shortestPaths.get(i).get(k);
           Path<TNode, TWeight> pathKJ = shortestPaths.get(k).get(j);
           if (pathIK != null && pathKJ != null) {
+            // Find the smaller of the two paths pathIK and pathKJ
             TWeight newWeight = pathIK.getTotalWeight().compareTo(pathKJ.getTotalWeight()) < 0 ? pathKJ.getTotalWeight()
                 : pathIK.getTotalWeight();
             if (!shortestPaths.get(i).containsKey(j) ||
