@@ -2,9 +2,9 @@ package org.ants.generator.algo;
 
 import java.util.*;
 
-public class DynamicDijkstra<TNode, TWeight extends Comparable<TWeight>> implements SupportsSSSP<TNode, TWeight> {
+public class DynamicDijkstra<TNode, TWeight extends Comparable<TWeight>> {
 
-  private Map<TNode, List<Path<TNode, TWeight>>> shortestPaths;
+  private Map<TNode, Path<TNode, TWeight>> shortestPaths;
   private Map<TNode, Map<TNode, TWeight>> currentWeights; // Map to store current weights of edges
 
   public DynamicDijkstra() {
@@ -12,7 +12,7 @@ public class DynamicDijkstra<TNode, TWeight extends Comparable<TWeight>> impleme
     currentWeights = new HashMap<>();
   }
 
-  public Map<TNode, List<Path<TNode, TWeight>>> findShortestPaths(Graph<TNode, TWeight> graph, TNode source,
+  public Map<TNode, Path<TNode, TWeight>> findShortestPaths(Graph<TNode, TWeight> graph, TNode source,
       Path<TNode, TWeight> initialPath) {
     shortestPaths.clear();
     currentWeights.clear();
@@ -32,11 +32,11 @@ public class DynamicDijkstra<TNode, TWeight extends Comparable<TWeight>> impleme
 
       visited.add(currentVertex);
 
-      if (!shortestPaths.containsKey(currentVertex)) {
-        shortestPaths.put(currentVertex, new ArrayList<>());
-      }
+      // if (!shortestPaths.containsKey(currentVertex)) {
+      //   shortestPaths.put(currentVertex, new Path<>(currentVertex));
+      // }
 
-      shortestPaths.get(currentVertex).add(currentPath);
+      shortestPaths.put(currentVertex, currentPath);
 
       List<Edge<TNode, TWeight>> neighbors = graph.getNeighbors(currentVertex);
 
@@ -45,28 +45,44 @@ public class DynamicDijkstra<TNode, TWeight extends Comparable<TWeight>> impleme
         TWeight weight = neighbor.getWeight();
 
         if (!visited.contains(neighborVertex)) {
-          TWeight currentWeight = getCurrentWeight(currentVertex, neighborVertex);
-          if (currentWeight == null || weight.compareTo(currentWeight) < 0) {
-            updateCurrentWeight(currentVertex, neighborVertex, weight);
-            Path<TNode, TWeight> newPath = currentPath.extend(neighborVertex, weight);
-            minHeap.offer(newPath);
+          //TWeight currentWeight = getCurrentWeight(currentVertex, neighborVertex);
+          // if (currentWeight == null || weight.compareTo(currentWeight) < 0) {
+          //   updateCurrentWeight(currentVertex, neighborVertex, weight);
+          //   Path<TNode, TWeight> newPath = currentPath.extend(neighborVertex, weight);
+          //   minHeap.offer(newPath);
+          if (weight!=null){
+            Path <TNode,TWeight> neighborShortestPath = shortestPaths.get(neighborVertex);
+
+            //extend 
+            List<TNode> newVertices = new ArrayList<>(currentPath.getVertices());
+            newVertices.add(neighborVertex);
+
+            //propagated path total weight
+            TWeight currentPathWeight = currentPath.getTotalWeight();
+            TWeight newTotalWeight = (currentPathWeight == null) ? weight : currentPathWeight + weight;
+            TWeight neighborShortestPaTWeight = neighborShortestPath.getTotalWeight();
+
+            if (newTotalWeight.compareTo(neighborShortestPaTWeight) < 0){
+              NumericalPath<TNode,TWeight> newPath = new NumericalPath<>(newVertices, newTotalWeight);
+              minHeap.offer(newPath);
+            }
           }
         }
       }
-    }
 
+
+    }
     return shortestPaths;
   }
-
   // Function to get the current weight of an edge
-  private TWeight getCurrentWeight(TNode source, TNode destination) {
-    return currentWeights.getOrDefault(source, new HashMap<>()).get(destination);
-  }
+  // private TWeight getCurrentWeight(TNode source, TNode destination) {
+  //   return currentWeights.getOrDefault(source, new HashMap<>()).get(destination);
+  // }
 
-  // Function to update the current weight of an edge
-  private void updateCurrentWeight(TNode source, TNode destination, TWeight newWeight) {
-    currentWeights.computeIfAbsent(source, k -> new HashMap<>()).put(destination, newWeight);
-  }
+  // // Function to update the current weight of an edge
+  // private void updateCurrentWeight(TNode source, TNode destination, TWeight newWeight) {
+  //   currentWeights.computeIfAbsent(source, k -> new HashMap<>()).put(destination, newWeight);
+  // }
 
   public static void main(String[] args) {
     // Example usage
@@ -79,10 +95,10 @@ public class DynamicDijkstra<TNode, TWeight extends Comparable<TWeight>> impleme
     graph.addEdge("D", "E", 2);
 
     DynamicDijkstra<String, Integer> dynamicDijkstra = new DynamicDijkstra<>();
-    Map<String, List<Path<String, Integer>>> shortestPaths = dynamicDijkstra.findShortestPaths(graph, "A",
+    Map<String, Path<String, Integer>> shortestPaths = dynamicDijkstra.findShortestPaths(graph, "A",
         new NumericalPath<>("A"));
 
-    for (Map.Entry<String, List<Path<String, Integer>>> entry : shortestPaths.entrySet()) {
+    for (Map.Entry<String, Path<String, Integer>> entry : shortestPaths.entrySet()) {
       System.out.println("Shortest paths to " + entry.getKey() + ":");
       for (Path<String, Integer> path : entry.getValue()) {
         System.out.println(path);
@@ -95,7 +111,7 @@ public class DynamicDijkstra<TNode, TWeight extends Comparable<TWeight>> impleme
     // Re-run Dijkstra's algorithm to account for the updated weight
     shortestPaths = dynamicDijkstra.findShortestPaths(graph, "A", new NumericalPath<>("A"));
 
-    for (Map.Entry<String, List<Path<String, Integer>>> entry : shortestPaths.entrySet()) {
+    for (Map.Entry<String, Path<String, Integer>> entry : shortestPaths.entrySet()) {
       System.out.println("Updated shortest paths to " + entry.getKey() + ":");
       for (Path<String, Integer> path : entry.getValue()) {
         System.out.println(path);

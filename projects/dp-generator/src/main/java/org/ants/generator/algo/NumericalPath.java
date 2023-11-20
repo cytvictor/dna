@@ -13,17 +13,24 @@ public class NumericalPath<TNode, TWeight extends Comparable<TWeight>> extends P
     super(source);
   }
 
-  @Override
-  public NumericalPath<TNode, TWeight> extend(TNode destination, TWeight weight) {
-    List<TNode> newVertices = new ArrayList<>(vertices);
-    newVertices.add(destination);
+  // @Override
+  // public NumericalPath<TNode, TWeight> extend(TNode destination, TWeight weight, Path<TNode, TWeight> neighborShortestPath) {
 
-    TWeight newTotalWeight = (totalWeight == null) ? weight : totalWeight;
-    if (weight != null) {
-      newTotalWeight = newTotalWeight.compareTo(weight) > 0 ? weight : newTotalWeight;
-    }
+  //   List<TNode> newVertices = new ArrayList<>(vertices);
+  //   newVertices.add(destination);
 
-    return new NumericalPath<>(newVertices, newTotalWeight);
-  }
+  //   //propagated path total weight
+  //   TWeight newTotalWeight = (totalWeight == null) ? weight : totalWeight + weight;
+  //   TWeight neighborShortestPaTWeight = neighborShortestPath.getTotalWeight();
+
+  //   if (newTotalWeight.compareTo(neighborShortestPaTWeight) < 0){
+  //     newPath = new NumericalPath<>(newVertices, newTotalWeight)
+  //     minHeap.offer(newPath);
+  //   }
+  //   // newTotalWeight = newTotalWeight.compareTo(neighborShortestPaTWeight) > 0 ? neighborShortestPaTWeight : newTotalWeight;
+    
+
+  //   return new NumericalPath<>(newVertices, newTotalWeight);
+  // }
 
 }
