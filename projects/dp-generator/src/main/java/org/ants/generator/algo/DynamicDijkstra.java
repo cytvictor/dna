@@ -2,7 +2,8 @@ package org.ants.generator.algo;
 
 import java.util.*;
 
-public class DynamicDijkstra<TNode, TWeight extends Comparable<TWeight>> {
+
+public class DynamicDijkstra<TNode> {
 
   private Map<TNode, Path<TNode, TWeight>> shortestPaths;
   private Map<TNode, Map<TNode, TWeight>> currentWeights; // Map to store current weights of edges
@@ -59,8 +60,10 @@ public class DynamicDijkstra<TNode, TWeight extends Comparable<TWeight>> {
 
             //propagated path total weight
             TWeight currentPathWeight = currentPath.getTotalWeight();
-            TWeight newTotalWeight = (currentPathWeight == null) ? weight : currentPathWeight + weight;
-            TWeight neighborShortestPaTWeight = neighborShortestPath.getTotalWeight();
+            TWeight newTotalWeight = (currentPathWeight == null) ? weight : currentPathWeight.add(weight);
+            
+            TWeight neighborShortestPaTWeight = (neighborShortestPath == null) 
+            ? new TWeight(Integer.MAX_VALUE): neighborShortestPath.getTotalWeight();
 
             if (newTotalWeight.compareTo(neighborShortestPaTWeight) < 0){
               NumericalPath<TNode,TWeight> newPath = new NumericalPath<>(newVertices, newTotalWeight);
@@ -86,36 +89,47 @@ public class DynamicDijkstra<TNode, TWeight extends Comparable<TWeight>> {
 
   public static void main(String[] args) {
     // Example usage
-    Graph<String, Integer> graph = new Graph<>();
-    graph.addEdge("A", "B", 2);
-    graph.addEdge("A", "C", 4);
-    graph.addEdge("B", "C", 1);
-    graph.addEdge("B", "D", 7);
-    graph.addEdge("C", "E", 3);
-    graph.addEdge("D", "E", 2);
+    Graph<String, TWeight> graph = new Graph<>();
+    graph.addEdge("A", "B", new TWeight(2));
+    // graph.addEdge("A", "C", 4);
+    graph.addEdge("A", "C", new TWeight(4));
+    // graph.addEdge("B", "C", 1);
+    graph.addEdge("B", "C", new TWeight(1));
+    // graph.addEdge("B", "D", 7);
+    graph.addEdge("B", "D", new TWeight(7));
+    // graph.addEdge("C", "E", 3);
+    graph.addEdge("C", "E", new TWeight(3));
+    // graph.addEdge("D", "E", 2);
+    graph.addEdge("D", "E", new TWeight(2));
 
-    DynamicDijkstra<String, Integer> dynamicDijkstra = new DynamicDijkstra<>();
-    Map<String, Path<String, Integer>> shortestPaths = dynamicDijkstra.findShortestPaths(graph, "A",
+    DynamicDijkstra<String> dynamicDijkstra = new DynamicDijkstra<>();
+    Map<String, Path<String, TWeight>> shortestPaths = dynamicDijkstra.findShortestPaths(graph, "A",
         new NumericalPath<>("A"));
 
-    for (Map.Entry<String, Path<String, Integer>> entry : shortestPaths.entrySet()) {
+    for (Map.Entry<String, Path<String, TWeight>> entry : shortestPaths.entrySet()) {
       System.out.println("Shortest paths to " + entry.getKey() + ":");
-      for (Path<String, Integer> path : entry.getValue()) {
-        System.out.println(path);
-      }
+      Path<String, TWeight> path = entry.getValue();
+      System.out.println(path);
+      //print cost of path
+      int cost = (path.getTotalWeight() == null) ? Integer.MAX_VALUE : path.getTotalWeight().getCost();
+      System.out.println(cost);
+      
     }
 
     // Update the weight of an edge (e.g., increase the weight from A to B)
-    graph.updateEdge("A", "B", 5);
+    graph.updateEdge("A", "B", new TWeight(5));
 
     // Re-run Dijkstra's algorithm to account for the updated weight
     shortestPaths = dynamicDijkstra.findShortestPaths(graph, "A", new NumericalPath<>("A"));
 
-    for (Map.Entry<String, Path<String, Integer>> entry : shortestPaths.entrySet()) {
+    for (Map.Entry<String, Path<String, TWeight>> entry : shortestPaths.entrySet()) {
       System.out.println("Updated shortest paths to " + entry.getKey() + ":");
-      for (Path<String, Integer> path : entry.getValue()) {
-        System.out.println(path);
-      }
+      Path<String, TWeight> path = entry.getValue();
+      System.out.println(path);
+      //print cost of path
+      int cost = (path.getTotalWeight() == null) ? Integer.MAX_VALUE : path.getTotalWeight().getCost();
+      System.out.println(cost);
+      
     }
   }
 }
