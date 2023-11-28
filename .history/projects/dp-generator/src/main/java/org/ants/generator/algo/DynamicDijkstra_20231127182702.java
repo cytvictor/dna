@@ -13,7 +13,7 @@ public class DynamicDijkstra<TNode> {
     currentWeights = new HashMap<>();
   }
 
-  public Map<TNode, Path<TNode, TWeight>> findShortestPaths(Graph<TNode> graph, TNode source,
+  public Map<TNode, Path<TNode, TWeight>> findShortestPaths(Graph<TNode, TWeight> graph, TNode source,
       Path<TNode, TWeight> initialPath) {
     shortestPaths.clear();
     currentWeights.clear();
@@ -89,7 +89,7 @@ public class DynamicDijkstra<TNode> {
 
   public static void main(String[] args) {
     // Example usage
-    Graph<String> graph = new Graph<>();
+    Graph<String, TWeight> graph = new Graph<>();
     graph.addEdge("A", "B", new TWeight(2));
     // graph.addEdge("A", "C", 4);
     graph.addEdge("A", "C", new TWeight(4));

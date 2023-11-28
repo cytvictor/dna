@@ -36,7 +36,15 @@ public class Graph<TNode> {
   public Set<TNode> getVertices() {
     return adjacencyList.keySet();
   }
-  
+
+  public List<Edge<TNode, TWeight>> getEdges() {
+    List<Edge<TNode, TWeight>> edges = new ArrayList<>();
+    for (List<Edge<TNode, TWeight>> edgeList : adjacencyList.values()) {
+      edges.addAll(edgeList);
+    }
+    return edges;
+  }
+
   public List<Edge<TNode, TWeight>> getNeighbors(TNode vertex) {
     return adjacencyList.getOrDefault(vertex, Collections.emptyList());
   }

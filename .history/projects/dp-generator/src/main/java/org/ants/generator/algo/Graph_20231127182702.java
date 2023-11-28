@@ -8,7 +8,7 @@ import java.util.*;
  * @param <TNode>   The type of the vertices.
  * @param <TWeight> The type of the edge weights.
  */
-public class Graph<TNode> {
+public class Graph<TNode, TWeight extends Comparable<TWeight>> {
   private Map<TNode, List<Edge<TNode, TWeight>>> adjacencyList;
 
   public Graph() {
@@ -36,7 +36,7 @@ public class Graph<TNode> {
   public Set<TNode> getVertices() {
     return adjacencyList.keySet();
   }
-  
+
   public List<Edge<TNode, TWeight>> getNeighbors(TNode vertex) {
     return adjacencyList.getOrDefault(vertex, Collections.emptyList());
   }
