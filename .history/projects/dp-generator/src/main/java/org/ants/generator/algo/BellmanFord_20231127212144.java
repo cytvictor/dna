@@ -16,6 +16,7 @@ public class BellmanFord<TNode> {
   public void relax(TNode source, TNode destination, TWeight weight) {
     Path<TNode, TWeight> sourceShortestPath = shortestPaths.get(source);
     Path<TNode, TWeight> neighborShortestPath = shortestPaths.get(destination);
+    Path<TNode, TWeight> destinationShortestPath = shortestPaths.get(destination);
 
     //extend 
     List<TNode> newVertices = new ArrayList<>(sourceShortestPath.getVertices());
@@ -25,11 +26,10 @@ public class BellmanFord<TNode> {
     TWeight currentPathWeight =sourceShortestPath.getTotalWeight();
     TWeight newTotalWeight = (currentPathWeight == null) ? weight : currentPathWeight.add(weight);
     
-    TWeight neighborShortestPathWeight = (neighborShortestPath == null) 
+    TWeight neighborShortestPaTWeight = (neighborShortestPath == null) 
     ? new TWeight(Integer.MAX_VALUE): neighborShortestPath.getTotalWeight();
 
-    if (newTotalWeight.compareTo(neighborShortestPathWeight) < 0) {
-      NumericalPath<TNode,TWeight> newPath = new NumericalPath<>(newVertices, newTotalWeight);
+    if (newTotalWeight.compareTo(destinationShortestPath.getTotalWeight()) < 0) {
       shortestPaths.put(destination, newPath);
     }
   }

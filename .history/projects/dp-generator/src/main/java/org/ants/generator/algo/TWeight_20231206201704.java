@@ -26,23 +26,21 @@ public class TWeight implements Comparable<TWeight> {
 
     // add method
     public TWeight add(TWeight _other) {
-        return new TWeight(this.getCost() + _other.getCost());
-        // if (this.inf) {
-        //     return this;
-        // }
-        // if (_other.inf)
-        //     return _other;
+        if (this.inf) {
+            return this;
+        }
+        if (_other.inf)
+            return _other;
 
+        TWeight newWeight = new TWeight(this.from, this.to, null, false, false);
+        BGPAdjRib newAdjRib = new BGPAdjRib(this.adjRib.bgpNetwork, this.adjRib.asPath, this.adjRib.localPref);
+        newWeight.adjRib = newAdjRib;
 
-        // TWeight newWeight = new TWeight(this.from, this.to, null, false, false);
-        // BGPAdjRib newAdjRib = new BGPAdjRib(this.adjRib.bgpNetwork, this.adjRib.asPath, this.adjRib.localPref);
-        // newWeight.adjRib = newAdjRib;
+        newWeight.adjRib.asPath.add(_other.from.as);
+        newWeight.from = this.from;
+        newWeight.to = _other.to;
 
-        // newWeight.adjRib.asPath.add(_other.from.as);
-        // newWeight.from = this.from;
-        // newWeight.to = _other.to;
-
-        // return newWeight;
+        return newWeight;
     }
 
     // //is infinity
@@ -65,27 +63,27 @@ public class TWeight implements Comparable<TWeight> {
             return this.cost < _other.cost ? -1 : 1;
         }
         return 0;
-        // if (this.inf && _other.inf) {
-        //     return 1;
-        // }
-        // if (this.inf)
-        //     return 1;
-        // if (_other.inf) {
-        //     return -1;
-        // }
+        if (this.inf && _other.inf) {
+            return 1;
+        }
+        if (this.inf)
+            return 1;
+        if (_other.inf) {
+            return -1;
+        }
 
-        // // compare as_path, if as_path is not the same, shorter as_path is better
-        // if (!this.adjRib.asPath.equals(_other.adjRib.asPath)) {
-        //     return this.adjRib.asPath.size() > _other.adjRib.asPath.size() ? -1 : 1;
-        // }
+        // compare as_path, if as_path is not the same, shorter as_path is better
+        if (!this.adjRib.asPath.equals(_other.adjRib.asPath)) {
+            return this.adjRib.asPath.size() > _other.adjRib.asPath.size() ? -1 : 1;
+        }
 
-        // // compare local_preference, higher local_preference is better, if not the same
-        // if (this.adjRib.localPref != _other.adjRib.localPref) {
-        //     return this.adjRib.localPref < _other.adjRib.localPref ? -1 : 1;
-        // }
+        // compare local_preference, higher local_preference is better, if not the same
+        if (this.adjRib.localPref != _other.adjRib.localPref) {
+            return this.adjRib.localPref < _other.adjRib.localPref ? -1 : 1;
+        }
 
-        // // compare lexical order
-        // return 1;
+        // compare lexical order
+        return 1;
     }
 
     // subtract method

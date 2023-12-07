@@ -12,6 +12,7 @@ public class Graph<TNode> {
   private Map <TNode, Map<TNode, TWeight>> inNeighborMap;
   private Map <TNode, Map<TNode, TWeight>> outNeighborMap;
   // private Map<TNode, List<Edge<TNode, TWeight>>> adjacencyList;
+  // private Map<TNode, List<Edge<TNode, TWeight>>> inList;
 
   public Graph() {
     inNeighborMap = new HashMap<>();

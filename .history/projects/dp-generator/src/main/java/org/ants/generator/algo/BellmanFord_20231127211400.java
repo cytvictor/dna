@@ -15,21 +15,19 @@ public class BellmanFord<TNode> {
   //relaxation
   public void relax(TNode source, TNode destination, TWeight weight) {
     Path<TNode, TWeight> sourceShortestPath = shortestPaths.get(source);
-    Path<TNode, TWeight> neighborShortestPath = shortestPaths.get(destination);
+    Path<TNode, TWeight> destinationShortestPath = shortestPaths.get(destination);
 
     //extend 
     List<TNode> newVertices = new ArrayList<>(sourceShortestPath.getVertices());
     newVertices.add(destination);
 
     //propagated path total weight
-    TWeight currentPathWeight =sourceShortestPath.getTotalWeight();
-    TWeight newTotalWeight = (currentPathWeight == null) ? weight : currentPathWeight.add(weight);
-    
-    TWeight neighborShortestPathWeight = (neighborShortestPath == null) 
-    ? new TWeight(Integer.MAX_VALUE): neighborShortestPath.getTotalWeight();
+    TWeight newTotalWeight = (sourceShortestPath.getTotalWeight() == null) ? weight
+        : sourceShortestPath.getTotalWeight().compareTo(weight) < 0 ? weight : sourceShortestPath.getTotalWeight();
 
-    if (newTotalWeight.compareTo(neighborShortestPathWeight) < 0) {
-      NumericalPath<TNode,TWeight> newPath = new NumericalPath<>(newVertices, newTotalWeight);
+    Path<TNode, TWeight> newPath = new NumericalPath<>(newVertices, newTotalWeight);
+
+    if (newTotalWeight.compareTo(destinationShortestPath.getTotalWeight()) < 0) {
       shortestPaths.put(destination, newPath);
     }
   }
@@ -90,9 +88,9 @@ public class BellmanFord<TNode> {
     Map<String, Path<String, TWeight>> shortestPaths = bellmanFord.findShortestPaths(graph, "A",
         new NumericalPath<>("A"));
 
-    for (Map.Entry<String, Path<String, TWeight>> entry : shortestPaths.entrySet()) {
+    for (Map.Entry<String, Path<String, Integer>> entry : shortestPaths.entrySet()) {
       System.out.println("Shortest paths to " + entry.getKey() + ":");
-      Path<String, TWeight> path = entry.getValue();
+      Path<String, Integer> path = entry.getValue();
       System.out.println(path);
       
     }

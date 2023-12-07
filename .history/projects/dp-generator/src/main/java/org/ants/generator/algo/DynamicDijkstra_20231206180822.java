@@ -14,11 +14,9 @@ public class DynamicDijkstra<TNode> {
   }
 
   public Map<TNode, Path<TNode, TWeight>> findShortestPaths(Graph<TNode> graph, TNode source,
-      Path<TNode, TWeight> initialPath, Boolean update) {
-    if (!update){
-      shortestPaths.clear();
-      currentWeights.clear();
-    }
+      Path<TNode, TWeight> initialPath) {
+    shortestPaths.clear();
+    currentWeights.clear();
 
     PriorityQueue<Path<TNode, TWeight>> minHeap = new PriorityQueue<>();
     Set<TNode> visited = new HashSet<>();
@@ -39,66 +37,39 @@ public class DynamicDijkstra<TNode> {
       //   shortestPaths.put(currentVertex, new Path<>(currentVertex));
       // }
 
-      //check whether a in neighbor provides a shorter path
-      for (TNode inNeighbor : graph.getInNeighbors(currentVertex)) { 
-        Path<TNode, TWeight> inNeighborShortestPath = shortestPaths.get(inNeighbor);
-        TNode shortestPathInNeighbor = (inNeighborShortestPath == null) ? null : inNeighborShortestPath.getDestination();
-        if (shortestPathInNeighbor == null) {
-          continue;
-        }
-        TWeight inNeighborShortestPathWeight = (inNeighborShortestPath == null) 
-        ? new TWeight(Integer.MAX_VALUE): inNeighborShortestPath.getTotalWeight();
-
-        TWeight currentPathWeight = currentPath.getTotalWeight();
-        //get edge weight
-        TWeight edgeWeight = graph.getWeight(inNeighbor, currentVertex);
-
-        TWeight newTotalWeight = (inNeighborShortestPathWeight == null)? edgeWeight: inNeighborShortestPathWeight.add(edgeWeight);
-
-        //print current inNeighbor and current Vertex
-        System.out.println("inNeighbor: " + inNeighbor);
-        System.out.println("currentVertex: " + currentVertex);
-        if (newTotalWeight.compareTo(currentPathWeight) < 0){
-          //extend 
-          List<TNode> newVertices =  new ArrayList<>(inNeighborShortestPath.getVertices());
-          newVertices.add(currentVertex);
-
-          NumericalPath<TNode,TWeight> newPath = new NumericalPath<>(newVertices, newTotalWeight);
-          minHeap.offer(newPath);
-        }
-      }
-
       shortestPaths.put(currentVertex, currentPath);
 
-      for (TNode outNeighbor : graph.getOutNeighbors(currentVertex)) {
-        TWeight edgeWeight = graph.getWeight(currentVertex, outNeighbor);
+      List<Edge<TNode, TWeight>> neighbors = graph.getNeighbors(currentVertex);
 
-        if (!visited.contains(outNeighbor)) {
+      for (Edge<TNode, TWeight> neighbor : neighbors) {
+        TNode neighborVertex = neighbor.getDestination();
+        TWeight weight = neighbor.getWeight();
+
+        if (!visited.contains(neighborVertex)) {
           //TWeight currentWeight = getCurrentWeight(currentVertex, neighborVertex);
           // if (currentWeight == null || weight.compareTo(currentWeight) < 0) {
           //   updateCurrentWeight(currentVertex, neighborVertex, weight);
           //   Path<TNode, TWeight> newPath = currentPath.extend(neighborVertex, weight);
           //   minHeap.offer(newPath);
-          // if (edgeWeight!=null){
-          Path <TNode,TWeight> neighborShortestPath = shortestPaths.get(outNeighbor);
+          if (weight!=null){
+            Path <TNode,TWeight> neighborShortestPath = shortestPaths.get(neighborVertex);
 
-
-          //propagated path total weight
-          TWeight currentPathWeight = currentPath.getTotalWeight();
-          TWeight newTotalWeight = (currentPathWeight == null) ? edgeWeight : currentPathWeight.add(edgeWeight);
-          
-          TWeight neighborShortestPathWeight = (neighborShortestPath == null) 
-          ? new TWeight(Integer.MAX_VALUE): neighborShortestPath.getTotalWeight();
-
-          if (newTotalWeight.compareTo(neighborShortestPathWeight) < 0){
             //extend 
             List<TNode> newVertices = new ArrayList<>(currentPath.getVertices());
-            newVertices.add(outNeighbor);
+            newVertices.add(neighborVertex);
 
-            NumericalPath<TNode,TWeight> newPath = new NumericalPath<>(newVertices, newTotalWeight);
-            minHeap.offer(newPath);
+            //propagated path total weight
+            TWeight currentPathWeight = currentPath.getTotalWeight();
+            TWeight newTotalWeight = (currentPathWeight == null) ? weight : currentPathWeight.add(weight);
+            
+            TWeight neighborShortestPathWeight = (neighborShortestPath == null) 
+            ? new TWeight(Integer.MAX_VALUE): neighborShortestPath.getTotalWeight();
+
+            if (newTotalWeight.compareTo(neighborShortestPathWeight) < 0){
+              NumericalPath<TNode,TWeight> newPath = new NumericalPath<>(newVertices, newTotalWeight);
+              minHeap.offer(newPath);
+            }
           }
-          
         }
       }
 
@@ -133,7 +104,7 @@ public class DynamicDijkstra<TNode> {
 
     DynamicDijkstra<String> dynamicDijkstra = new DynamicDijkstra<>();
     Map<String, Path<String, TWeight>> shortestPaths = dynamicDijkstra.findShortestPaths(graph, "A",
-        new NumericalPath<>("A"), false);
+        new NumericalPath<>("A"));
 
     for (Map.Entry<String, Path<String, TWeight>> entry : shortestPaths.entrySet()) {
       System.out.println("Shortest paths to " + entry.getKey() + ":");
@@ -148,10 +119,10 @@ public class DynamicDijkstra<TNode> {
 
 
     // Update the weight of an edge (e.g., increase the weight from A to B)
-    graph.updateEdge("C", "E", new TWeight(9));
+    graph.updateEdge("C", "3", new TWeight(9));
 
     // Re-run Dijkstra's algorithm to account for the updated weight
-    shortestPaths = dynamicDijkstra.findShortestPaths(graph, "A", new NumericalPath<>("A"), false);
+    shortestPaths = dynamicDijkstra.findShortestPaths(graph, "A", shortestPaths.get("E"));
 
     for (Map.Entry<String, Path<String, TWeight>> entry : shortestPaths.entrySet()) {
       System.out.println("Updated shortest paths to " + entry.getKey() + ":");

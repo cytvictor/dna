@@ -12,6 +12,7 @@ public class Graph<TNode> {
   private Map <TNode, Map<TNode, TWeight>> inNeighborMap;
   private Map <TNode, Map<TNode, TWeight>> outNeighborMap;
   // private Map<TNode, List<Edge<TNode, TWeight>>> adjacencyList;
+  // private Map<TNode, List<Edge<TNode, TWeight>>> inList;
 
   public Graph() {
     inNeighborMap = new HashMap<>();
@@ -22,18 +23,9 @@ public class Graph<TNode> {
 
   public void addEdge(TNode source, TNode destination, TWeight weight) {
     // adjacencyList.computeIfAbsent(source, k -> new ArrayList<>()).add(new Edge<>(destination, weight));
-    // inList.computeIfAbsent(destination, k -> new ArrayList<>()).add(new Edge<>(source, weight)); 
-    Map<TNode,TWeight> destinationInNeighbors = inNeighborMap.get(destination);
-    if (destinationInNeighbors == null) {
-      inNeighborMap.put(destination, new HashMap<>());
-    }
-    inNeighborMap.get(destination).put(source, weight);
-    
-    Map<TNode,TWeight> sourceOutNeighbors = outNeighborMap.get(source);
-    if (sourceOutNeighbors == null) {
-      outNeighborMap.put(source, new HashMap<>());
-    }
-    outNeighborMap.get(source).put(destination, weight);
+    // inList.computeIfAbsent(destination, k -> new ArrayList<>()).add(new Edge<>(source, weight));
+    inNeighborMap.computeIfAbsent(destination, null).put(source, weight);
+    outNeighborMap.computeIfAbsent(source, null).put(destination, weight);
   }
 
   public void updateEdge(TNode source, TNode destination, TWeight newWeight) {

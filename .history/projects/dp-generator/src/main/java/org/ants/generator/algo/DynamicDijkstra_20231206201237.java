@@ -55,9 +55,6 @@ public class DynamicDijkstra<TNode> {
 
         TWeight newTotalWeight = (inNeighborShortestPathWeight == null)? edgeWeight: inNeighborShortestPathWeight.add(edgeWeight);
 
-        //print current inNeighbor and current Vertex
-        System.out.println("inNeighbor: " + inNeighbor);
-        System.out.println("currentVertex: " + currentVertex);
         if (newTotalWeight.compareTo(currentPathWeight) < 0){
           //extend 
           List<TNode> newVertices =  new ArrayList<>(inNeighborShortestPath.getVertices());
@@ -150,17 +147,17 @@ public class DynamicDijkstra<TNode> {
     // Update the weight of an edge (e.g., increase the weight from A to B)
     graph.updateEdge("C", "E", new TWeight(9));
 
-    // Re-run Dijkstra's algorithm to account for the updated weight
-    shortestPaths = dynamicDijkstra.findShortestPaths(graph, "A", new NumericalPath<>("A"), false);
+    // // Re-run Dijkstra's algorithm to account for the updated weight
+    // shortestPaths = dynamicDijkstra.findShortestPaths(graph, "A", new NumericalPath<>("A"), false);
 
-    for (Map.Entry<String, Path<String, TWeight>> entry : shortestPaths.entrySet()) {
-      System.out.println("Updated shortest paths to " + entry.getKey() + ":");
-      Path<String, TWeight> path = entry.getValue();
-      System.out.println(path);
-      //print cost of path
-      int cost = (path.getTotalWeight() == null) ? Integer.MAX_VALUE : path.getTotalWeight().getCost();
-      System.out.println(cost);
+    // for (Map.Entry<String, Path<String, TWeight>> entry : shortestPaths.entrySet()) {
+    //   System.out.println("Updated shortest paths to " + entry.getKey() + ":");
+    //   Path<String, TWeight> path = entry.getValue();
+    //   System.out.println(path);
+    //   //print cost of path
+    //   int cost = (path.getTotalWeight() == null) ? Integer.MAX_VALUE : path.getTotalWeight().getCost();
+    //   System.out.println(cost);
       
-    }
+    // }
   }
 }

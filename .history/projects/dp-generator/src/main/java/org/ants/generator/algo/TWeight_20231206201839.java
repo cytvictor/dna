@@ -27,22 +27,22 @@ public class TWeight implements Comparable<TWeight> {
     // add method
     public TWeight add(TWeight _other) {
         return new TWeight(this.getCost() + _other.getCost());
-        // if (this.inf) {
-        //     return this;
-        // }
-        // if (_other.inf)
-        //     return _other;
+        if (this.inf) {
+            return this;
+        }
+        if (_other.inf)
+            return _other;
 
 
-        // TWeight newWeight = new TWeight(this.from, this.to, null, false, false);
-        // BGPAdjRib newAdjRib = new BGPAdjRib(this.adjRib.bgpNetwork, this.adjRib.asPath, this.adjRib.localPref);
-        // newWeight.adjRib = newAdjRib;
+        TWeight newWeight = new TWeight(this.from, this.to, null, false, false);
+        BGPAdjRib newAdjRib = new BGPAdjRib(this.adjRib.bgpNetwork, this.adjRib.asPath, this.adjRib.localPref);
+        newWeight.adjRib = newAdjRib;
 
-        // newWeight.adjRib.asPath.add(_other.from.as);
-        // newWeight.from = this.from;
-        // newWeight.to = _other.to;
+        newWeight.adjRib.asPath.add(_other.from.as);
+        newWeight.from = this.from;
+        newWeight.to = _other.to;
 
-        // return newWeight;
+        return newWeight;
     }
 
     // //is infinity

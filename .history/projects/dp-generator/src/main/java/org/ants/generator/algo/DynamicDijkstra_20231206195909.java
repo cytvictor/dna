@@ -55,9 +55,6 @@ public class DynamicDijkstra<TNode> {
 
         TWeight newTotalWeight = (inNeighborShortestPathWeight == null)? edgeWeight: inNeighborShortestPathWeight.add(edgeWeight);
 
-        //print current inNeighbor and current Vertex
-        System.out.println("inNeighbor: " + inNeighbor);
-        System.out.println("currentVertex: " + currentVertex);
         if (newTotalWeight.compareTo(currentPathWeight) < 0){
           //extend 
           List<TNode> newVertices =  new ArrayList<>(inNeighborShortestPath.getVertices());
@@ -151,7 +148,7 @@ public class DynamicDijkstra<TNode> {
     graph.updateEdge("C", "E", new TWeight(9));
 
     // Re-run Dijkstra's algorithm to account for the updated weight
-    shortestPaths = dynamicDijkstra.findShortestPaths(graph, "A", new NumericalPath<>("A"), false);
+    shortestPaths = dynamicDijkstra.findShortestPaths(graph, "A", shortestPaths.get("E"), true);
 
     for (Map.Entry<String, Path<String, TWeight>> entry : shortestPaths.entrySet()) {
       System.out.println("Updated shortest paths to " + entry.getKey() + ":");

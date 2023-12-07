@@ -55,9 +55,6 @@ public class DynamicDijkstra<TNode> {
 
         TWeight newTotalWeight = (inNeighborShortestPathWeight == null)? edgeWeight: inNeighborShortestPathWeight.add(edgeWeight);
 
-        //print current inNeighbor and current Vertex
-        System.out.println("inNeighbor: " + inNeighbor);
-        System.out.println("currentVertex: " + currentVertex);
         if (newTotalWeight.compareTo(currentPathWeight) < 0){
           //extend 
           List<TNode> newVertices =  new ArrayList<>(inNeighborShortestPath.getVertices());
