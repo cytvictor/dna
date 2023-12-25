@@ -42,6 +42,7 @@ public class ConfigParser {
     }
 
     public void updateConfig(String configPath) throws IOException{
+        System.out.println(configPath);
         parse(batfishAPI.parse(configPath));
     }
 

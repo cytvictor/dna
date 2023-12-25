@@ -72,7 +72,7 @@ public class Network {
       // 1. Find SPT for this bgpNetwork
       DynamicDijkstra<Node> dijkstra = new DynamicDijkstra<>();
       Map<Node, Path<Node, TWeight>> shortestPaths = dijkstra.findShortestPaths(graph,
-          bgpNetwork.node, new BGPPath<Node, TWeight>(bgpNetwork.node, bgpNetwork));
+          bgpNetwork.node, new BGPPath<Node, TWeight>(bgpNetwork.node, bgpNetwork), false);
 
       // 2. Derive RIBs from SPT
       for (Map.Entry<Node, Path<Node, TWeight>> path : shortestPaths.entrySet()) {

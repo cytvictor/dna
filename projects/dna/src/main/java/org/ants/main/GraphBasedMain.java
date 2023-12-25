@@ -3,7 +3,6 @@ package org.ants.main;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +27,6 @@ public class GraphBasedMain {
     init("../Dynamic-APSP-Dataplane-Verification/networks/fattree/bgp/bgp_fattree04");
 
     // update("../Dynamic-APSP-Dataplane-Verification/networks/withdrawals/update");
-
   }
 
   public static void init(String configPath) throws IOException {

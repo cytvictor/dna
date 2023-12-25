@@ -24,18 +24,18 @@ public class BGPPath<TNode, TWeight extends Comparable<TWeight>> extends Path<TN
     this.bgpNetwork = network;
   }
 
-  @Override
-  public Path<TNode, TWeight> extend(TNode destination, TWeight weight) {
-    List<TNode> newVertices = new ArrayList<>(vertices);
-    newVertices.add(destination);
+  // @Override
+  // public Path<TNode, TWeight> extend(TNode destination, TWeight weight) {
+  //   List<TNode> newVertices = new ArrayList<>(vertices);
+  //   newVertices.add(destination);
 
-    TWeight newTotalWeight = (totalWeight == null) ? weight : totalWeight;
-    if (weight != null) {
-      newTotalWeight = newTotalWeight.compareTo(weight) > 0 ? weight : newTotalWeight;
-    }
+  //   TWeight newTotalWeight = (totalWeight == null) ? weight : totalWeight;
+  //   if (weight != null) {
+  //     newTotalWeight = newTotalWeight.compareTo(weight) > 0 ? weight : newTotalWeight;
+  //   }
 
-    return new BGPPath<>(newVertices, newTotalWeight, bgpNetwork);
-  }
+  //   return new BGPPath<>(newVertices, newTotalWeight, bgpNetwork);
+  // }
 
   public BgpNetwork getBgpNetwork() {
     return bgpNetwork;

@@ -11,7 +11,7 @@ public class BGPAdjRib {
 
   public BGPAdjRib(BgpNetwork bgpNetwork, ArrayList<Long> asPath, long localPref) {
     this.bgpNetwork = bgpNetwork;
-    this.asPath = asPath;
+    this.asPath = new ArrayList<>(asPath);
     this.localPref = localPref;
   }
 

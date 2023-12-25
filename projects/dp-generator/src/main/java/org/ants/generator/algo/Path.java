@@ -26,7 +26,7 @@ public abstract class Path<TNode, TWeight extends Comparable<TWeight>>
     return vertices.get(vertices.size() - 1);
   }
 
-  public abstract Path<TNode, TWeight> extend(TNode destination, TWeight weight);
+  // public abstract Path<TNode, TWeight> extend(TNode destination, TWeight weight);
 
   public TWeight getTotalWeight() {
     return totalWeight;
