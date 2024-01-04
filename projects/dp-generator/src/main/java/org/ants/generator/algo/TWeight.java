@@ -17,6 +17,16 @@ public class TWeight implements Comparable<TWeight> {
         this.isLocal = isLocal;
     }
 
+    public TWeight(TWeight w) {
+        this.from = w.from;
+        this.to = w.to;
+        this.adjRib = w.adjRib;
+        this.inf = w.inf;
+        this.isLocal = w.isLocal;
+        this.med = w.med;
+        this.isEbgp = w.isEbgp;
+    }
+
     public Node from;
     public Node to;
     public BGPAdjRib adjRib;

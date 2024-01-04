@@ -47,7 +47,7 @@ public class DynamicDijkstra<TNode> {
           continue;
         }
         TWeight inNeighborShortestPathWeight = (inNeighborShortestPath == null) 
-        ? new TWeight(Integer.MAX_VALUE): inNeighborShortestPath.getTotalWeight();
+        ? new TWeight(null, null, null, true, false): inNeighborShortestPath.getTotalWeight();
 
         TWeight currentPathWeight = currentPath.getTotalWeight();
         //get edge weight
@@ -88,7 +88,7 @@ public class DynamicDijkstra<TNode> {
           TWeight newTotalWeight = (currentPathWeight == null) ? edgeWeight : currentPathWeight.add(edgeWeight);
           
           TWeight neighborShortestPathWeight = (neighborShortestPath == null) 
-          ? new TWeight(Integer.MAX_VALUE): neighborShortestPath.getTotalWeight();
+          ? new TWeight(null, null, null, true, false): neighborShortestPath.getTotalWeight();
 
           if (newTotalWeight.compareTo(neighborShortestPathWeight) < 0){
             //extend 

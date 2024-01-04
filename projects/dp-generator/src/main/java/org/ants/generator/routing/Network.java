@@ -7,12 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.ants.generator.algo.DijkstraMultiPath;
 import org.ants.generator.algo.DynamicDijkstra;
 import org.ants.generator.algo.Graph;
 import org.ants.generator.algo.Path;
 import org.ants.generator.algo.TWeight;
 import org.ants.generator.routing.path.BGPPath;
+import org.ants.generator.routing.weight.BGPAdjRib;
 import org.ants.generator.routing.weight.ComparableBGPWeight;
 import org.ants.parser.datamodel.Prefix;
 import org.ants.parser.relation.*;
@@ -43,34 +43,38 @@ public class Network {
 
     // 2. Now we process BGP routing. We recognize BGP neighbors (instead of links)
     // as neighbors
-    for (String updateType : updates.keySet()) {
-      for (Relation rel : updates.get(updateType)) {
-        if (rel instanceof EBgpNeighbor) {
-          EBgpNeighbor bgpNeighbor = (EBgpNeighbor) rel;
-          Node node1 = bgpNeighbor.node1;
-          Node node2 = bgpNeighbor.node2;
-          // oldGraph.addEdge(node1, node2);
-          // oldGraph.addEdge(node2, node1);
-          graph.addEdge(node1, node2, new TWeight(0));
-          graph.addEdge(node2, node1, new TWeight(0));
-        }
-      }
-    }
 
     // print graph
     // System.out.println(graph);
     // System.out.println(networksPendingPropagate);
 
-  }
+  // }
 
-  public void propagateRouteAdvertisementSSSP() {
+  // public void propagateRouteAdvertisementSSSP() {
     Map<Node, Set<BgpRib>> nodeRibs = new HashMap<>();
 
     for (BgpNetwork bgpNetwork : networksPendingPropagate) {
       System.out.println("Propagating " + bgpNetwork);
 
+      for (String updateType : updates.keySet()) {
+        for (Relation rel : updates.get(updateType)) {
+          if (rel instanceof EBgpNeighbor) {
+            EBgpNeighbor bgpNeighbor = (EBgpNeighbor) rel;
+            Node node1 = bgpNeighbor.node1;
+            Node node2 = bgpNeighbor.node2;
+            // oldGraph.addEdge(node1, node2);
+            // oldGraph.addEdge(node2, node1);
+            System.out.println(node1);
+            System.out.println(node2);
+            
+            graph.addEdge(node1, node2, new TWeight(node1, node2, new BGPAdjRib(bgpNetwork, new ArrayList<>(), 0), false, false));
+            graph.addEdge(node2, node1, new TWeight(node2, node1, new BGPAdjRib(bgpNetwork, new ArrayList<>(), 0), false, false));
+          }
+        }
+      }
+
       // 1. Find SPT for this bgpNetwork
-      DynamicDijkstra<Node> dijkstra = new DynamicDijkstra<>();
+      DynamicDijkstra dijkstra = new DynamicDijkstra();
       Map<Node, Path<Node, TWeight>> shortestPaths = dijkstra.findShortestPaths(graph,
           bgpNetwork.node, new BGPPath<Node, TWeight>(bgpNetwork.node, bgpNetwork), false);
 
@@ -79,6 +83,8 @@ public class Network {
         // System.out.println("Shortest paths to " + entry.getKey().node + ":");
         // for (Path<Node, TWeight> path : entry.getValue()) {
         System.out.println("  " + path);
+        if (true)
+          continue;
         Node nextHop = null;
         for (Node visitedNode : path.getValue().getVertices()) {
           Set<BgpRib> ribs = nodeRibs.get(visitedNode);

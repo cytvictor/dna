@@ -14,7 +14,7 @@ public class GraphBasedDPGenerator {
 
   public ArrayList<String> generateFibUpdates(Map<String, List<Relation>> updates) {
     network.constructGraphFromUpdates(updates);
-    network.propagateRouteAdvertisementSSSP();
+    // network.propagateRouteAdvertisementSSSP();
     return null;
   }
 
