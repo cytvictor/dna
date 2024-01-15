@@ -198,7 +198,7 @@ public class DynamicDijkstra<TNode> {
     graph.addEdge("edge-19", "aggregation-17", new TWeight(1));
 
     DynamicDijkstra<String> dynamicDijkstra = new DynamicDijkstra<>();
-    Map<String, Path<String, TWeight>> shortestPaths = dynamicDijkstra.findShortestPaths(graph, "edge-10",
+    Map<String, Path<String, TWeight>> shortestPaths = dynamicDijkstra.findShortestPaths(graph, "A",
         new NumericalPath<>("edge-10"), false);
 
     for (Map.Entry<String, Path<String, TWeight>> entry : shortestPaths.entrySet()) {

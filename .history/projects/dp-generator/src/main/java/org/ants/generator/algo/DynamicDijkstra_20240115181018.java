@@ -198,8 +198,8 @@ public class DynamicDijkstra<TNode> {
     graph.addEdge("edge-19", "aggregation-17", new TWeight(1));
 
     DynamicDijkstra<String> dynamicDijkstra = new DynamicDijkstra<>();
-    Map<String, Path<String, TWeight>> shortestPaths = dynamicDijkstra.findShortestPaths(graph, "edge-10",
-        new NumericalPath<>("edge-10"), false);
+    Map<String, Path<String, TWeight>> shortestPaths = dynamicDijkstra.findShortestPaths(graph, "A",
+        new NumericalPath<>("A"), false);
 
     for (Map.Entry<String, Path<String, TWeight>> entry : shortestPaths.entrySet()) {
       System.out.println("Shortest paths to " + entry.getKey() + ":");
@@ -213,20 +213,20 @@ public class DynamicDijkstra<TNode> {
 
 
 
-    // // Update the weight of an edge (e.g., increase the weight from A to B)
-    // graph.updateEdge("C", "E", new TWeight(9));
+    // Update the weight of an edge (e.g., increase the weight from A to B)
+    graph.updateEdge("C", "E", new TWeight(9));
 
-    // // Re-run Dijkstra's algorithm to account for the updated weight
-    // shortestPaths = dynamicDijkstra.findShortestPaths(graph, "A", new NumericalPath<>("A"), false);
+    // Re-run Dijkstra's algorithm to account for the updated weight
+    shortestPaths = dynamicDijkstra.findShortestPaths(graph, "A", new NumericalPath<>("A"), false);
 
-    // for (Map.Entry<String, Path<String, TWeight>> entry : shortestPaths.entrySet()) {
-    //   System.out.println("Updated shortest paths to " + entry.getKey() + ":");
-    //   Path<String, TWeight> path = entry.getValue();
-    //   System.out.println(path);
-    //   //print cost of path
-    //   int cost = (path.getTotalWeight() == null) ? Integer.MAX_VALUE : path.getTotalWeight().getCost();
-    //   System.out.println(cost);
+    for (Map.Entry<String, Path<String, TWeight>> entry : shortestPaths.entrySet()) {
+      System.out.println("Updated shortest paths to " + entry.getKey() + ":");
+      Path<String, TWeight> path = entry.getValue();
+      System.out.println(path);
+      //print cost of path
+      int cost = (path.getTotalWeight() == null) ? Integer.MAX_VALUE : path.getTotalWeight().getCost();
+      System.out.println(cost);
       
-    // }
+    }
   }
 }

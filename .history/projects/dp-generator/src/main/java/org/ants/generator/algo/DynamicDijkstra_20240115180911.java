@@ -180,26 +180,10 @@ public class DynamicDijkstra<TNode> {
     graph.addEdge("aggregation-17", "core-3", new TWeight(1));
     graph.addEdge("aggregation-17", "edge-18", new TWeight(1));
     graph.addEdge("aggregation-17", "edge-19", new TWeight(1));
-    graph.addEdge("edge-6", "aggregation-4", new TWeight(1));
-    graph.addEdge("edge-6", "aggregation-5", new TWeight(1));
-    graph.addEdge("edge-7", "aggregation-4", new TWeight(1));
-    graph.addEdge("edge-7", "aggregation-5", new TWeight(1));
-    graph.addEdge("edge-10", "aggregation-8", new TWeight(1));
-    graph.addEdge("edge-10", "aggregation-9", new TWeight(1));
-    graph.addEdge("edge-11", "aggregation-8", new TWeight(1));
-    graph.addEdge("edge-11", "aggregation-9", new TWeight(1));
-    graph.addEdge("edge-14", "aggregation-12", new TWeight(1));
-    graph.addEdge("edge-14", "aggregation-13", new TWeight(1));
-    graph.addEdge("edge-15", "aggregation-12", new TWeight(1));
-    graph.addEdge("edge-15", "aggregation-13", new TWeight(1));
-    graph.addEdge("edge-18", "aggregation-16", new TWeight(1));
-    graph.addEdge("edge-18", "aggregation-17", new TWeight(1));
-    graph.addEdge("edge-19", "aggregation-16", new TWeight(1));
-    graph.addEdge("edge-19", "aggregation-17", new TWeight(1));
 
     DynamicDijkstra<String> dynamicDijkstra = new DynamicDijkstra<>();
-    Map<String, Path<String, TWeight>> shortestPaths = dynamicDijkstra.findShortestPaths(graph, "edge-10",
-        new NumericalPath<>("edge-10"), false);
+    Map<String, Path<String, TWeight>> shortestPaths = dynamicDijkstra.findShortestPaths(graph, "A",
+        new NumericalPath<>("A"), false);
 
     for (Map.Entry<String, Path<String, TWeight>> entry : shortestPaths.entrySet()) {
       System.out.println("Shortest paths to " + entry.getKey() + ":");
@@ -213,20 +197,20 @@ public class DynamicDijkstra<TNode> {
 
 
 
-    // // Update the weight of an edge (e.g., increase the weight from A to B)
-    // graph.updateEdge("C", "E", new TWeight(9));
+    // Update the weight of an edge (e.g., increase the weight from A to B)
+    graph.updateEdge("C", "E", new TWeight(9));
 
-    // // Re-run Dijkstra's algorithm to account for the updated weight
-    // shortestPaths = dynamicDijkstra.findShortestPaths(graph, "A", new NumericalPath<>("A"), false);
+    // Re-run Dijkstra's algorithm to account for the updated weight
+    shortestPaths = dynamicDijkstra.findShortestPaths(graph, "A", new NumericalPath<>("A"), false);
 
-    // for (Map.Entry<String, Path<String, TWeight>> entry : shortestPaths.entrySet()) {
-    //   System.out.println("Updated shortest paths to " + entry.getKey() + ":");
-    //   Path<String, TWeight> path = entry.getValue();
-    //   System.out.println(path);
-    //   //print cost of path
-    //   int cost = (path.getTotalWeight() == null) ? Integer.MAX_VALUE : path.getTotalWeight().getCost();
-    //   System.out.println(cost);
+    for (Map.Entry<String, Path<String, TWeight>> entry : shortestPaths.entrySet()) {
+      System.out.println("Updated shortest paths to " + entry.getKey() + ":");
+      Path<String, TWeight> path = entry.getValue();
+      System.out.println(path);
+      //print cost of path
+      int cost = (path.getTotalWeight() == null) ? Integer.MAX_VALUE : path.getTotalWeight().getCost();
+      System.out.println(cost);
       
-    // }
+    }
   }
 }
