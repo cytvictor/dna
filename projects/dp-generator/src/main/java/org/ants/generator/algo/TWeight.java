@@ -75,39 +75,48 @@ public class TWeight implements Comparable<TWeight> {
         //     return this.cost < _other.cost ? -1 : 1;
         // }
         // return 0;
-
+        // System.out.println("Comparing from: " + this);
+        // System.out.println("Comparing to: " + _other);
         // The BGP decision Process
         if (this.inf && _other.inf) {
+            // System.out.println("    Result = from > to");
             return 1;
         }
-        if (this.inf)
+        if (this.inf) {
+            // System.out.println("    Result = from > to");
             return 1;
+        }
         if (_other.inf) {
+            // System.out.println("    Result = from < to");
             return -1;
         }
 
         // 1. Local preference
         // compare local_preference, higher local_preference is better, if not the same
         if (this.adjRib.localPref != _other.adjRib.localPref) {
-            return this.adjRib.localPref < _other.adjRib.localPref ? -1 : 1;
+            // System.out.println("    Result = " + (this.adjRib.localPref < _other.adjRib.localPref ? -1 : 1));
+            return this.adjRib.localPref < _other.adjRib.localPref ? 1 : -1;
         }
 
         // 2. AS path length
         // compare as_path, if as_path is not the same, shorter as_path is better
         if (!this.adjRib.asPath.equals(_other.adjRib.asPath)) {
-            return this.adjRib.asPath.size() > _other.adjRib.asPath.size() ? -1 : 1;
+            // System.out.println("    Result = " + (this.adjRib.asPath.size() > _other.adjRib.asPath.size() ? -1 : 1));
+            return this.adjRib.asPath.size() > _other.adjRib.asPath.size() ? 1 : -1;
         }
 
         // 3. Origin type: WIP
         // 4. MED
         // compare med, lower med is better
         if (this.med != _other.med) {
-            return this.med < _other.med ? -1 : 1;
+            // System.out.println("    Result = " + (this.med < _other.med ? -1 : 1));
+            return this.med > _other.med ? 1 : -1;
         }
 
         // 5. eBGP over iBGP
         // compare isEbgp, eBGP is better
         if (this.isEbgp != _other.isEbgp) {
+            // System.out.println("    Result = " + (this.isEbgp ? -1 : 1));
             return this.isEbgp ? -1 : 1;
         }
 

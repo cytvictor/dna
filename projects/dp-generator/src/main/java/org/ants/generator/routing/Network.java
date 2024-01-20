@@ -64,8 +64,8 @@ public class Network {
             Node node2 = bgpNeighbor.node2;
             // oldGraph.addEdge(node1, node2);
             // oldGraph.addEdge(node2, node1);
-            System.out.println(node1);
-            System.out.println(node2);
+            // System.out.println(node1);
+            // System.out.println(node2);
             
             graph.addEdge(node1, node2, new TWeight(node1, node2, new BGPAdjRib(bgpNetwork, new ArrayList<>(), 0), false, false));
             graph.addEdge(node2, node1, new TWeight(node2, node1, new BGPAdjRib(bgpNetwork, new ArrayList<>(), 0), false, false));
@@ -82,9 +82,9 @@ public class Network {
       for (Map.Entry<Node, Path<Node, TWeight>> path : shortestPaths.entrySet()) {
         // System.out.println("Shortest paths to " + entry.getKey().node + ":");
         // for (Path<Node, TWeight> path : entry.getValue()) {
-        System.out.println("  " + path);
-        if (true)
-          continue;
+        // System.out.println("  " + path);
+        // if (true)
+        //   continue;
         Node nextHop = null;
         for (Node visitedNode : path.getValue().getVertices()) {
           Set<BgpRib> ribs = nodeRibs.get(visitedNode);
@@ -92,13 +92,16 @@ public class Network {
             ribs = new HashSet<>();
             nodeRibs.put(visitedNode, ribs);
           }
+          System.out.println(visitedNode);
           if (visitedNode == bgpNetwork.node) {
             // 如果是本地节点，那么就是local rib, 下一跳是本地
-            ribs.add(new BgpRib(((BGPPath<Node, TWeight>) path.getValue()).getBgpNetwork().prefix, bgpNetwork.node,
+            // ribs.add()
+            // System.out.println(path.getValue());
+            ribs.add(new BgpRib(bgpNetwork.prefix, bgpNetwork.node,
                 true));
           } else {
             // 如果是其他节点，那么就是adj rib, 下一跳是 SPT 前一个节点
-            ribs.add(new BgpRib(((BGPPath<Node, TWeight>) path.getValue()).getBgpNetwork().prefix, nextHop));
+            ribs.add(new BgpRib(bgpNetwork.prefix, nextHop));
           }
           nextHop = visitedNode;
         }
