@@ -23,8 +23,8 @@ public class GraphBasedMain {
   public static void main(String[] args) throws IOException {
     // init("networks/example-network/base");
     // init("../Dynamic-APSP-Dataplane-Verification/networks/withdrawals/update");
-    init("../Dynamic-APSP-Dataplane-Verification/networks/single-source-multipath/base");
-    init("../Dynamic-APSP-Dataplane-Verification/networks/fattree/bgp/bgp_fattree04");
+    // init("../Dynamic-APSP-Dataplane-Verification/networks/single-source-multipath/base");
+    init("../Dynamic-APSP-Dataplane-Verification/networks/fattree/bgp/bgp_fattree08");
 
     // update("../Dynamic-APSP-Dataplane-Verification/networks/withdrawals/update");
   }
@@ -40,8 +40,13 @@ public class GraphBasedMain {
     // HashSet<String> edgePorts = parser.getEdgePorts();
     // Map<String, Map<String, Object>> dpDevices = parser.getDataPlaneModels();
 
+    // start time
+    long startTime = System.nanoTime();
     generator = new GraphBasedDPGenerator();
     ArrayList<String> fibUpdates = generator.generateFibUpdates(configUpdates);
+    // end time
+    long endTime = System.nanoTime();
+    System.out.println("Time: " + (endTime - startTime) / 1000000 + "ms");
 
     // verifier = new DPVerifier(testcase, new ArrayList<>(topos), new
     // ArrayList<>(edgePorts), dpDevices);

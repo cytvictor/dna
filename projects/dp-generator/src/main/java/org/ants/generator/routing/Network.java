@@ -82,7 +82,7 @@ public class Network {
       for (Map.Entry<Node, Path<Node, TWeight>> path : shortestPaths.entrySet()) {
         // System.out.println("Shortest paths to " + entry.getKey().node + ":");
         // for (Path<Node, TWeight> path : entry.getValue()) {
-        // System.out.println("  " + path);
+        System.out.println("  " + path);
         // if (true)
         //   continue;
         Node nextHop = null;
