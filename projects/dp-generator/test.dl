@@ -1,0 +1,38 @@
+
+input relation Edge(snode: string, dnode: string, int: usize)
+input relation Node(node: string)
+output relation Shortest_path(snode: string, dnode: string, int: usize)
+relation Dijkstra(snode: string, dnode: string, int: usize)
+
+Dijkstra(src, dest, dist) :-
+    Node(src),
+    Node(dest),
+    src != dest,
+    Shortest_path(src, dest, dist).
+
+Shortest_path(x, y, d) :-
+    Node(x),
+    Node(y),
+    x != y,
+    Dijkstra(x, y, d).
+
+// Base case: Initialize distances
+Shortest_path(src, src, 0) :-
+    Node(src).
+
+Shortest_path(src, dest, dist) :-
+    Node(src),
+    Node(dest),
+    Edge(src, dest, _),
+    src != dest,
+    Edge(src, dest, dist).
+
+// Recursive case: Compute shortest path
+Shortest_path(src, dest, distX + distDest) :-
+    Node(src),
+    Node(dest),
+    src != dest,
+    Edge(src, x, distX),
+    Shortest_path(x, dest, distDest).//,
+    //dist = distX + distDest.//,
+    //not exists (Y, DistY) in Shortest_path(Src, Dest, DistY) : DistY < Dist.
