@@ -44,8 +44,8 @@ public class Node implements Relation {
 
   @Override
   public String toString() {
-    // return String.format("VNode{\"%s\",\"%s\"}", node, vrf);
-    return String.format("%s", node);
+    return String.format("VNode{\"%s\",\"%s\",%s,%s}", node, vrf, as, id);
+    // return String.format("%s", node);
   }
 
   public String toDATString() {
