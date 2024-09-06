@@ -1,6 +1,7 @@
 package org.ants.exp;
 
 import org.ants.main.DNA;
+import org.ants.parser.ConfigParser;
 import org.ants.parser.relation.Relation;
 
 import java.io.BufferedWriter;
@@ -181,7 +182,10 @@ public class ExpHelper {
         }
         for (ExpRecord expRecord : expRecords) {
             String filename = expRecord.dscp;
+            String jsonFilename = expRecord.dscp + ".json";
             try {
+
+                // write in ddlog input format (provided by DNA)
                 BufferedWriter bw = new BufferedWriter(new FileWriter(Paths.get(dir.toString(), filename).toString()));
                 bw.write("input: \n");
                 for (Relation r : expRecord.input.getOrDefault("insert", new ArrayList<>())) {
@@ -200,6 +204,10 @@ public class ExpHelper {
                 }
 
                 bw.close();
+
+                // write in json format
+                ConfigParser.dumpUpdateToFile(expRecord.input, Paths.get(dir.toString(), jsonFilename).toString());
+
             } catch (IOException e) {
                 e.printStackTrace();
             }

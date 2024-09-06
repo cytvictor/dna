@@ -12,6 +12,13 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws IOException {
+        if (args.length > 0) {
+            if (args[0] == "dump") {
+                DNA.init(args[0]);
+                DNA.dumpAllToFile();
+            }
+            return;
+        }
         Terminal terminal = TerminalBuilder.terminal();
         Completers.FileNameCompleter completer = new Completers.FileNameCompleter();
         LineReader reader = LineReaderBuilder.builder()

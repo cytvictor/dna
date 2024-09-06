@@ -1,3 +1,15 @@
+## Evaluation Data Generation For Dynamic Verification
+
+1. Parse static network to network updates json
+```bash
+$ java -Djava.library.path=/home/obliv2001/Desktop/net-verify/dna/projects/dp-generator/routing_ddlog -cp /home/obliv2001/Desktop/net-verify/dna/projects/dna/target/dna-0.1.0.jar org.ants.main.Main /home/obliv2001/Desktop/net-verify/Dynamic-APSP-Dataplane-Verification/networks/single-source-multipath/base
+```
+
+2. Dump synthetic updates to json
+```bash
+$ java -Djava.library.path=/home/obliv2001/Desktop/net-verify/dna/projects/dp-generator/routing_ddlog -cp /home/obliv2001/Desktop/net-verify/dna/projects/dna/target/dna-0.1.0.jar org.ants.exp.EvalSyntheticChangeBGP /home/obliv2001/Desktop/net-verify/Dynamic-APSP-Dataplane-Verification/networks/single-source-multipath/base
+```
+
 ## Differential Network Analysis.
 
 This is a prototype implementation of the following [paper](https://nskeylab.xjtu.edu.cn/people/pzhang/files/2021/09/dna_nsdi22.pdf):

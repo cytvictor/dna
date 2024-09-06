@@ -87,6 +87,7 @@ public class EvalSyntheticChangeBGP {
                 .filter(net -> octect2IsEven(net.prefix.ip)).collect(Collectors.toList());
         List<Node> aggrNodes = nodeRels.stream().map(r -> (Node) r).filter(n -> n.node.startsWith("aggr")).collect(Collectors.toList());
 
+        if (evenNets.size() == 0) return;
         for (int i = 0; i < helper.batchSize; i++) {
             BgpNetwork bgpNet = evenNets.get(rand.nextInt(evenNets.size()));
             Node node = aggrNodes.get(rand.nextInt(aggrNodes.size()));

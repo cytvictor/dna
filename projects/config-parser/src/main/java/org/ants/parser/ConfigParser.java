@@ -13,7 +13,12 @@ import org.batfish.datamodel.acl.AclLineMatchExpr;
 import org.batfish.datamodel.acl.MatchHeaderSpace;
 import org.batfish.datamodel.collections.NodeInterfacePair;
 
+import com.google.gson.Gson;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -537,6 +542,31 @@ public class ConfigParser {
         sb.append("commit;\ndump Fib;\n");
 
         return sb.toString();
+    }
+
+    public void writeDDlogInputJsonTo(String filename) {
+        try {
+            dumpUpdateToFile(getControlPlane(), filename);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void dumpUpdateToFile(Map<String, List<Relation>> updates, String fileName) throws IOException {
+        ArrayList<Map<String, Object>> jsonUpdates = new ArrayList<>();
+        for (String updateType: updates.keySet()) {
+            for (Relation r : updates.get(updateType)) {
+                Map<String, Object> relationMap = new LinkedHashMap<>();
+                relationMap.put("UpdateType", updateType);
+                relationMap.put("Relation", r.getClass().getSimpleName());
+                relationMap.put("Data", r);
+                jsonUpdates.add(relationMap);
+            }
+        }
+        BufferedWriter jsonBw = new BufferedWriter(new FileWriter(fileName));
+        Gson gson = new Gson();
+        jsonBw.write(gson.toJson(jsonUpdates));
+        jsonBw.close();
     }
 
     public HashSet<String> getTopology() {

@@ -64,6 +64,10 @@ public class DNA {
         printer.println(parser.getDDlogInputText());
     }
 
+    public static void dumpDDlogInputAsJson(String filename) {
+        parser.writeDDlogInputJsonTo(filename);
+    }
+
     public static void dumpTopo(PrintStream printer) {
         HashSet<String> topos = parser.getTopology();
         for (String line : topos) {
@@ -110,6 +114,7 @@ public class DNA {
     }
 
     public static void dumpAllToFile() throws IOException {
+        dumpDDlogInputAsJson(Paths.get(workingPath, "updates.json").toString());
         dumpDDlogInput(new PrintStream(new BufferedOutputStream(new FileOutputStream(Paths.get(workingPath, "change_base").toString())), true));
         dumpTopo(new PrintStream(new BufferedOutputStream(new FileOutputStream(Paths.get(workingPath, "topo").toString())), true));
         dumpEdgePorts(new PrintStream(new BufferedOutputStream(new FileOutputStream(Paths.get(workingPath, "edge_ports").toString())), true));
