@@ -135,6 +135,9 @@ public class ExpHelper {
         Timer.timestamp();
         List<Relation> relations = baseRelations.get(relationClazz);
         List<ExpRecord> res = new ArrayList<>();
+        if (relations == null || relations.size() == 0) {
+            return res;
+        }
         for (int i = 0; i < batchSize; i++) {
             Relation relation = relations.get(rand.nextInt(relations.size()));
             res.addAll(runSingleUpdate(relation, i));
