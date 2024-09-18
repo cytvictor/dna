@@ -5,8 +5,13 @@ import org.ants.parser.relation.*;
 import org.ants.parser.relation.neighbor.EBgpNeighbor;
 import org.ants.parser.relation.routeMap.Policy;
 import org.ants.parser.relation.routeMap.RouteMapIn;
+import org.ants.parser.relation.routeMap.matchCondition.ExtendPrefix;
+import org.ants.parser.relation.routeMap.matchCondition.MatchCondition;
+import org.ants.parser.relation.routeMap.matchCondition.MatchPrefixList;
 import org.ants.parser.relation.routeMap.setAttribute.SetAttribute;
 import org.ants.parser.relation.routeMap.setAttribute.SetLocalPref;
+import org.ants.parser.relation.routeMap.setAttribute.SetMed;
+import org.glassfish.grizzly.utils.ArraySet;
 import org.ants.main.DNA;
 
 import java.io.IOException;
@@ -66,6 +71,44 @@ public class EvalSyntheticChangeBGP {
         helper.bookSumTime("LocalPref", res);
     }
 
+    public void runMEDUpdate() throws IOException{
+        List<ExpRecord> res = new ArrayList<>();
+        List<Relation> ebnRels = helper.baseRelations.get(EBgpNeighbor.class.getSimpleName());
+
+        for (int i = 0; i < helper.batchSize; i++) {
+            EBgpNeighbor ebn = (EBgpNeighbor) ebnRels.get(rand.nextInt(ebnRels.size()));
+            Map<String, SetAttribute> setAttribute = new HashMap<>();
+            setAttribute.put("SetMED", new SetMed(110));
+            Policy policy = new Policy(true, new HashMap<>(), setAttribute);
+            RouteMapIn routeMapIn = new RouteMapIn(ebn.node1, ebn.node2, Collections.singletonList(policy));
+
+            res.addAll(helper.runSingleUpdateReverse(routeMapIn, i));
+        }
+        helper.saveResult(DNA.testcase + "_med", res);
+        helper.bookSumTime("MED", res);
+    }
+
+    public void runRejectPrefixUpdate() throws IOException{
+        List<ExpRecord> res = new ArrayList<>();
+        List<Relation> ebnRels = helper.baseRelations.get(EBgpNeighbor.class.getSimpleName());
+
+        for (int i = 0; i < helper.batchSize; i++) {
+            EBgpNeighbor ebn = (EBgpNeighbor) ebnRels.get(rand.nextInt(ebnRels.size()));
+            Map<String, MatchCondition> matchConds = new HashMap<>();
+            Set<Prefix> prefixes = new HashSet<>();
+            prefixes.add(new ExtendPrefix("10.8.0.0/16", 16, 24));
+            MatchPrefixList matchPrefixList = new MatchPrefixList(prefixes);
+            matchConds.put("MatchPrefixList", matchPrefixList);
+
+            Policy policy = new Policy(false, matchConds, new HashMap<>());
+            RouteMapIn routeMapIn = new RouteMapIn(ebn.node1, ebn.node2, Collections.singletonList(policy));
+
+            res.addAll(helper.runSingleUpdateReverse(routeMapIn, i));
+        }
+        helper.saveResult(DNA.testcase + "_rejpfx", res);
+        helper.bookSumTime("RejectPrefix", res);
+    }
+
     public void runMultipathUpdate() throws IOException{
         List<ExpRecord> res = new ArrayList<>();
         List<Relation> nodeRels = helper.baseRelations.get(Node.class.getSimpleName());
@@ -105,16 +148,18 @@ public class EvalSyntheticChangeBGP {
 
     public static void main(String[] args) throws IOException{
         String configPath = args[0];
-        // String configPath = "../networks/fattree/bgp/bgp_fattree04";
+        // String configPath = "../../Dynamic-APSP-Dataplane-Verification/networks/fattree/bgp/bgp_fattree20";
 
         EvalSyntheticChangeBGP evalSyntheticChangeBGP = new EvalSyntheticChangeBGP(configPath);
-        evalSyntheticChangeBGP.runInterfaceUpdate();
-        evalSyntheticChangeBGP.runNetworkUpdate();
-        evalSyntheticChangeBGP.runNeighborUpdate();
-        evalSyntheticChangeBGP.runLocalPrefUpdate();
-        evalSyntheticChangeBGP.runMultipathUpdate();
-        evalSyntheticChangeBGP.runAggregationUpdate();
-        evalSyntheticChangeBGP.runStaticRouteUpdate();
+        // evalSyntheticChangeBGP.runInterfaceUpdate();
+        // evalSyntheticChangeBGP.runNetworkUpdate();
+        // evalSyntheticChangeBGP.runNeighborUpdate();
+        // evalSyntheticChangeBGP.runLocalPrefUpdate();
+        // evalSyntheticChangeBGP.runMEDUpdate();
+        // evalSyntheticChangeBGP.runMultipathUpdate();
+        // evalSyntheticChangeBGP.runAggregationUpdate();
+        evalSyntheticChangeBGP.runRejectPrefixUpdate();
+        // evalSyntheticChangeBGP.runStaticRouteUpdate();
         evalSyntheticChangeBGP.helper.summaryTime();
     }
 }

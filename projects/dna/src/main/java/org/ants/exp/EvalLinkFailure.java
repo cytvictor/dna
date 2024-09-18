@@ -2,6 +2,7 @@ package org.ants.exp;
 
 import org.ants.parser.relation.Interface;
 import org.ants.parser.relation.Relation;
+import org.ants.parser.relation.neighbor.EBgpNeighbor;
 import org.ants.main.DNA;
 
 import java.io.IOException;
@@ -40,7 +41,8 @@ public class EvalLinkFailure {
 
         List<ExpRecord> res = new ArrayList<>();
         List<Relation> oldList = new ArrayList<>();
-        for (int i = 0; i < links.size(); i++) {
+        for (int i = 0; i < 50; i++) {
+            System.out.println(i);
             List<String> link = links.get(i);
             Interface intfRel1 = (Interface) intfRelMap.get(link.get(0));
             Interface intfRel2 = (Interface) intfRelMap.get(link.get(1));
@@ -61,13 +63,47 @@ public class EvalLinkFailure {
         helper.saveResult(DNA.testcase + "_lf", res);
         helper.bookSumTime("LinkFailure1", res);
     }
+    public static Random rand = new Random(System.currentTimeMillis());
+
+    public void runNLinkFailureUpdate(int n) throws IOException {
+        List<Relation> neighborsRels = helper.baseRelations.get(EBgpNeighbor.class.getSimpleName());
+
+        List<ExpRecord> res = new ArrayList<>();
+        // List<Relation> oldList = new ArrayList<>();
+        for (int k = 0; k < 5; k++)
+        for (int i = 0; i < neighborsRels.size() && i <= 50; i+=1) {
+            System.out.println(k + "/" + i);
+            
+            List<Relation> relList = new ArrayList<>();
+            for (int j = 0; j < i; j++) {
+                while (true) {
+                    EBgpNeighbor intfRel = (EBgpNeighbor) neighborsRels.get(rand.nextInt(neighborsRels.size()));
+                    if (!relList.contains(intfRel)) {
+                        // System.out.println(intfRel);
+                        relList.add(intfRel);
+                        break;
+                    }
+                }
+            }
+
+            Map<String, List<Relation>> updates = new HashMap<>();
+            Map<String, List<Relation>> updatesRestore = new HashMap<>();
+            updates.put("delete", relList);
+            updatesRestore.put("insert", relList);
+            res.add(helper.runTransaction(String.format("change_update_%d_%d", i + 1, k), updates));
+            res.add(helper.runTransaction(String.format("change_restore_%d_%d", i + 1, k), updatesRestore));
+        }
+        helper.saveResult(DNA.testcase + "_n_lf", res);
+        helper.bookSumTime("NLinkFailure", res);
+    }
 
     public static void main(String[] args) throws IOException {
         String configPath = args[0];
         // String configPath = "../networks/fattree/bgp/bgp_fattree04";
 
         EvalLinkFailure evalLinkFailure = new EvalLinkFailure(configPath);
-        evalLinkFailure.run1LinkFailureUpdate();
+        // evalLinkFailure.run1LinkFailureUpdate();
+        evalLinkFailure.runNLinkFailureUpdate(5);
         evalLinkFailure.helper.summaryTime();
     }
 }
