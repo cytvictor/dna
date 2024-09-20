@@ -70,14 +70,15 @@ public class EvalLinkFailure {
 
         List<ExpRecord> res = new ArrayList<>();
         // List<Relation> oldList = new ArrayList<>();
-        for (int k = 0; k < 5; k++)
+        for (int k = 0; k < 1; k++)
         for (int i = 0; i < neighborsRels.size() && i <= 50; i+=1) {
             System.out.println(k + "/" + i);
             
             List<Relation> relList = new ArrayList<>();
-            for (int j = 0; j < i; j++) {
+            for (int j = 0; j < i * 10; j++) {
                 while (true) {
-                    EBgpNeighbor intfRel = (EBgpNeighbor) neighborsRels.get(rand.nextInt(neighborsRels.size()));
+                    // EBgpNeighbor intfRel = (EBgpNeighbor) neighborsRels.get(rand.nextInt(neighborsRels.size()));
+                    EBgpNeighbor intfRel = (EBgpNeighbor) neighborsRels.get(j);
                     if (!relList.contains(intfRel)) {
                         // System.out.println(intfRel);
                         relList.add(intfRel);
